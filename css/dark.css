@@ -1,0 +1,263 @@
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background: transparent;
+}
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(157, 165, 180);
+  border: 0;
+  border-radius: 5em;
+}
+::-webkit-scrollbar-thumb:active {
+  background: rgb(53, 59, 69);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: 0;
+  border-radius: 5em;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Virtual File List */
+.vfileswrapper {
+  color: rgb(157, 165, 180);
+  background: rgb(33, 37, 43);
+}
+.vfileswrapper .selected {
+  color: rgb(255, 255, 255);
+  background: rgb(49, 54, 63);
+}
+
+/* Menubar */
+header {
+  color: rgb(180, 214, 220);
+  background: #282C34;
+  border-bottom: 1px solid #525252;
+}
+.active {
+  color: #fff;
+  border-bottom: 2px solid #fff;
+/*
+  border-bottom: 2px solid #6AB5EC;
+*/
+}
+.dialog {
+  color: rgb(180, 214, 220);
+  background: rgb(40, 44, 52);
+  border: 1px solid #525252;
+}
+header a, .dialog a {
+  color: #72B0BB;
+}
+header a:hover, .dialog a:hover {
+  color: #fff;
+}
+.vfileswrapper footer a {
+  color: #C09E9B;
+  background: #7A322B;
+  background: rgba(210, 63, 43, 0.5);
+}
+.vfileswrapper footer a:hover {
+  color: #fff;
+  background: #D23F2B;
+}
+.vfileswrapper input {
+  font: 16px Lato;
+}
+.htmlfile {
+  color: #72B0BB;
+}
+.cssfile {
+  color: #72BB72;
+}
+.jsfile {
+  color: #BF8454;
+}
+.htmlfile:hover {
+  color: #68E8FF;
+}
+.cssfile:hover {
+  color: #9FFF9F;
+}
+.jsfile:hover {
+  color: #FFA65D;
+}
+.html-selected {
+  border-bottom: 1px solid #72B0BB;
+}
+.css-selected {
+  border-bottom: 1px solid #72BB72;
+}
+.js-selected {
+  border-bottom: 1px solid #BF8454;
+}
+
+ul.ldd-menu ul li a:hover{
+  color: #fff;
+/*
+  background: #0080FF;
+  color: #fff;
+*/
+}
+
+/* Editor */
+#splitContainer, .CodeMirror, .editor-container {
+  color: rgb(180, 214, 220);
+  border: 0;
+}
+
+.html-editor, .css-editor, .js-editor {
+  background-color: rgb(40, 44, 52);
+}
+
+.lint-error {
+  background: #13171D; 
+}
+#preview {
+  background: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+  THEME
+*/
+
+/* default */
+.box pre       { color: white!important; } 
+
+/* e.g. var, function */
+.cm-keyword    { color: #ddca7e!important; }
+
+/* e.g. #id */
+.cm-atom       { color: rgb(157, 165, 172)!important; }
+
+/* e.g. 20 */
+.cm-number     { color: #d0782a!important; }
+
+/* e.g. px, em */
+.cm-unit       { color: #d0782a!important; }
+
+/* e.g. @include, [this] */
+.cm-def       { color: rgb(168, 105, 189)!important; }
+
+/* e.g. $, i */ 
+.cm-variable   { color: #BBB081!important; }
+
+/* e.g. for key in [this], Markdown li */ 
+.cm-variable-2 { color: #809bbd!important; }
+
+/* e.g. getElementbyId, CSS properties */ 
+.cm-property       { color: rgb(75, 150, 161)!important; }
+
+/* e.g. CoffeeScript ->, CSS colons */ 
+.cm-operator   { color: #cccccc!important; }
+
+/* e.g. // comments */ 
+.cm-comment    { color: #666666!important; }
+
+/* e.g. "string" */ 
+.cm-string     { color: #96b38a!important; }
+
+/* e.g. some CSS values */ 
+.cm-string-2   { color: #FFFFFF!important; }
+
+/* e.g. @font-face */ 
+.cm-meta       { color: rgb(168, 105, 189)!important; }
+
+/* e.g. HTML elements */ 
+.cm-tag       { color: rgb(136, 173, 151)!important; }
+.cm-bracket       { color: rgb(157, 165, 180)!important; }
+
+/* e.g. class="" id="" */ 
+.cm-attribute       { color: rgb(209, 154, 102)!important; }
+
+/* e.g. .box */ 
+.cm-qualifier       { color: rgb(157, 165, 172)!important; }
+
+/* active line */ 
+.CodeMirror-activeline-background    { background: rgb(44, 50, 59)!important; }
+
+
+.CodeMirror-linenumber {
+  color: rgb(75, 83, 99)!important;
+  background: transparent!important;
+}
+.CodeMirror-linenumbers, .CodeMirror-gutters, .CodeMirror-gutter {
+  border: 0!important;
+  background: transparent!important;
+}
+
+.box {
+  background: rgb(33, 37, 43)!important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Custom Checkbox Styling */
+/* checkbox aspect */
+.check:not(:checked) + label:before,
+.check:checked + label:before {
+  border: 1px solid #15171D;
+  background: #3D424C;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.3)
+}
+/* checked mark aspect */
+.check:not(:checked) + label:after,
+.check:checked + label:after {
+  color: #578AF3;
+}
+/* disabled checkbox */
+.check:disabled:not(:checked) + label:before,
+.check:disabled:checked + label:before {
+  border-color: #bbb;
+  background-color: #ddd;
+}
+.check:disabled:checked + label:after {
+  color: #999;
+}
+.check:disabled + label {
+  color: #aaa;
+}
+/* accessibility */
+.check:checked:focus + label:before,
+.check:not(:checked):focus + label:before {
+  border: 1px dotted blue;
+}
+
+/* hover style just for information */
+label:hover:before {
+  border: 1px solid #4778d9!important;
+}

@@ -1,0 +1,205 @@
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background: transparent;
+}
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(157, 165, 180);
+  border: 0;
+  border-radius: 5em;
+}
+::-webkit-scrollbar-thumb:active {
+  background: rgb(53, 59, 69);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: 0;
+  border-radius: 5em;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Virtual File List */
+.vfileswrapper {
+  color: #666;
+  background: ##EFEFEF;
+}
+.vfileswrapper .selected {
+  background: #2882CA;
+  color: #fff;
+}
+.vfileswrapper input {
+  font: 16px Verdana;
+  color: #000;
+}
+::-webkit-input-placeholder {
+  color: #666;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: #666;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+  color: #666;
+}
+:-ms-input-placeholder {  
+  color: #666;
+}
+
+
+/* Menubar */
+header {
+  background: #fff;
+/*
+  background: #2882CA;
+  background: #2196F3;
+  background: #013BA6;
+*/
+  border-left: 1px solid #BDBDBD;
+  border-bottom: 1px solid #BDBDBD;
+}
+.dialog {
+  margin-left: -1px;
+  padding: 5px 6px;
+  border: 1px solid #BDBDBD;
+  background: #fff;
+}
+header a {
+  color: #333;
+/*
+  color: #ccc;
+*/
+}
+header a:hover {
+  color: #000;
+/*
+  color: #fff;
+*/
+}
+.active {
+  color: rgb(157, 165, 180);
+  border-bottom: 2px solid rgb(157, 165, 180);
+/*
+  border-bottom: 2px solid #6AB5EC;
+*/
+}
+.active:hover {
+  color: rgb(157, 165, 180);
+}
+.vfiles a {
+  font: 13px arial;
+}
+.dialog a {
+  color: #666;
+}
+.dialog a:hover {
+  color: #000;
+}
+.vfileswrapper footer a {
+  color: #fff;
+  background: #D23F2B;
+  background: rgba(210, 63, 43, 0.75);
+}
+.vfileswrapper footer a:hover {
+  background: #D23F2B;
+}
+.htmlfile {
+  color: #1D99AF;
+}
+.cssfile {
+  color: #24AB24;
+}
+.jsfile {
+  color: #BF8454;
+}
+.htmlfile:hover {
+  color: #72B0BB;
+}
+.cssfile:hover {
+  color: #72BB72;
+}
+.jsfile:hover {
+  color: #F56E00;
+}
+.html-selected {
+  border-bottom: 1px solid #1D99AF;
+}
+.css-selected {
+  border-bottom: 1px solid #24AB24;
+}
+.js-selected {
+  border-bottom: 1px solid #BF8454;
+}
+
+ul.ldd-menu ul li a:hover{
+  color: #0080FF;
+/*
+  background: #0080FF;
+  color: #fff;
+*/
+}
+
+
+
+/* Editor */
+#splitContainer, .CodeMirror, .editor-container {
+  border: 0;
+}
+#splitContainer {
+  border-left: 1px solid #BDBDBD;
+}
+
+.html-editor, .css-editor, .js-editor {
+  background-color: #fff;
+/*
+  background-color: #EFEFEF;
+*/
+}
+
+.lint-error {
+  background: #13171D; 
+}
+#preview {
+  background: #fff;
+}
+
+
+/* Custom Checkbox Styling */
+/* checkbox aspect */
+.check:not(:checked) + label:before,
+.check:checked + label:before {
+  border: 1px solid #aaa;
+  background: #f8f8f8;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.3)
+}
+/* checked mark aspect */
+.check:not(:checked) + label:after,
+.check:checked + label:after {
+  color: #0080FF;
+}
+/* disabled checkbox */
+.check:disabled:not(:checked) + label:before,
+.check:disabled:checked + label:before {
+  border-color: #bbb;
+  background-color: #ddd;
+}
+.check:disabled:checked + label:after {
+  color: #999;
+}
+.check:disabled + label {
+  color: #aaa;
+}
+/* accessibility */
+.check:checked:focus + label:before,
+.check:not(:checked):focus + label:before {
+  border: 1px dotted blue;
+}
+
+/* hover style just for information */
+label:hover:before {
+  border: 1px solid #4778d9!important;
+}

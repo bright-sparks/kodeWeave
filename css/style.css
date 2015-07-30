@@ -1,0 +1,485 @@
+@import url("normalize.css");
+@import url("fonts/font-awesome.css");
+@import url("../lib/jquery-ui.css");
+@import url("../lib/codemirror.css");
+@import url("../addon/fold/foldgutter.css");
+@import url("../addon/lint/lint.css");
+@import url("../lib/spectrum.css");
+@import url("../alertify/themes/alertify.core.css");
+@import url("../alertify/themes/alertify.default.css");
+@import url("../jqwidgets/styles/jqx.base.css");
+@import url("../jqwidgets/styles/jqx.metro.css");
+@import url("../jqwidgets/styles/jqx.metrodark.css");
+@import url("../addon/dialog/dialog.css");
+@import url("polyui.css");
+
+@font-face {
+  font-family: Fira;
+  src: url('fonts/FiraSans-Light.ttf');
+}
+@font-face {
+  font-family: Lato;
+  src: url('fonts/Lato-Light.ttf');
+}
+
+html, body {
+  height: 100%;
+}
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+a {
+  cursor: pointer;
+}
+a:active, a:focus {
+  outline: 0;
+}
+
+/* Virtual File List */
+.vfileswrapper {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  left: 0;
+  bottom: 0;
+  padding: 5px;
+}
+.vprojectname {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 240px;
+}
+.vfiles {
+  position: absolute;
+  top: 30px;
+  left: 5px;
+  right: 15px;
+  bottom: 40px;
+}
+.vfiles a {
+  font: 13px Lato;
+}
+.vfiles div {
+  padding: 3px 0;
+}
+.vfiles div a {
+  padding: 3px;
+}
+.vfileswrapper footer {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 235px;
+  border: 0;
+}
+.vfileswrapper footer input {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 12px 0;
+}
+.vfileswrapper input {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.vfileswrapper footer a {
+  padding: 0 13px;
+  font: normal small-caps normal 40px/1.2 Lato;
+  border-radius: 3em;
+}
+
+/* Menubar */
+header {
+  position: absolute;
+  top: 0;
+  left: 250px;
+  right: 0;
+  height: 24px;
+  padding: 10px 5px 0 5px;
+}
+header a {
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0 5px 8px 5px;
+  margin: 0 5px;
+  font: 13px sans-serif;
+}
+a:active {
+  outline: none;
+}
+.toolbox a {
+  display: block!important;
+}
+.fr, #add-library {
+  float: right;
+}
+.fl, header a {
+  float: left;
+}
+.fn {
+  float: none;
+}
+.block {
+  display: block;
+}
+.hide {
+  display: none;
+}
+
+/* Dialogs */
+.dialog a {
+  padding: 0;
+  font: 12px arial;
+}
+.dialog {
+  position: absolute;
+  top: 34px;
+  left: 0;
+  padding: 5px;
+  text-align: center;
+  overflow: auto;
+  z-index: 100;
+}
+
+/* Click Add Libraries or Demos In Dialog */
+.libraries-dialog a, .demos-dialog a {
+  margin: 0;
+}
+.libraries-dialog, .demos-dialog {
+  overflow-x: hidden;
+}
+.addlibrary-tablets, .adddemos-tablets {
+  display: block;
+  text-align: left;
+  width: 600px;
+}
+
+.addlibrary-tablets li a, .adddemos-tablets li a {
+  float: none;
+  text-align: left;
+  text-transform: capitalize;
+}
+
+ul.ldd-menu {
+  font-size: 13px;
+  list-style: none;
+  padding: 0;
+}
+
+ul.ldd-menu .ldd-submenu {
+  font-size: 10px;
+}
+
+ul.ldd-menu label {
+  padding-top: 5px;
+  margin: -5px;
+}
+
+ul.ldd-menu ul li a:hover{
+  font-weight: normal;
+}
+
+ul.ldd-menu ul {
+  list-style: outside none none;
+  float: left;
+  border-left: 1px solid #DDD;
+  margin: -27px 0;
+  padding: 10px;
+  width: 170px;
+}
+
+.ldd-heading {
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-style: italic;
+  color: #0080FF;
+}
+
+ul.ldd-menu ul li a {
+  font-family: Arial, serif;
+  font-size: 11px;
+  line-height: 20px;
+  padding: 1px 3px;
+  font-weight: normal;
+}
+
+.new {
+  color: #0CF;
+  font-size: 10px;
+}
+
+@media all and (max-width:680px) {
+  .addlibrary-tablets, .adddemos-tablets {
+    display: none;
+  }
+}
+
+/* Editor */
+#splitContainer, .CodeMirror {
+  z-index: 0;
+}
+.CodeMirror {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: normal;
+  display: block;
+  width: 100%;
+  background: transparent;
+}
+.CodeMirror, .CodeMirror-gutters {
+  height: 100%!important;
+}
+#splitWrapper {
+  position: absolute;
+  top: 35px;
+  left: 250px;
+  right: 0;
+  bottom: 0;
+}
+#splitContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.editor-container {
+  width: 100%;
+  height: 100%;
+}
+.editor-container > * {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  resize: none;
+}
+.lint-error {
+  font-family: arial; 
+  font-size: 70%; 
+  color: #a00; 
+  padding: 2px 5px 3px; 
+}
+.lint-error-icon {
+  color: white; 
+  background-color: red; 
+  font-weight: bold; 
+  border-radius: 50%; 
+  padding: 0 3px; 
+  margin-right: 7px;
+}
+
+.html-editor, .css-editor, .js-editor {
+  background-size: auto 80%;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.html-editor {
+  background-image: url("../html5.svg");
+}
+.css-editor {
+  background-image: url("../css3.svg");
+}
+.js-editor {
+  background-image: url("../js.svg");
+}
+
+.clearcode {
+  display: block;
+  position: absolute;
+  top: 50px;
+  right: 18px;
+  opacity: 0.6;
+  font-size: 24px;
+  z-index: 0;
+}
+
+.fullscreen-html-toggle, .fullscreen-css-toggle, .fullscreen-js-toggle, .preview-mode-toggle {
+  display: block;
+  position: absolute;
+  right: 20px;
+  opacity: 0.6;
+  font-size: 1.75em;
+  z-index: 0;
+}
+.fullscreen-html-toggle:hover, .fullscreen-css-toggle:hover, .fullscreen-js-toggle:hover, .preview-mode-toggle:hover, .clearcode:hover {
+  opacity: 1;
+}
+.fullscreen-html-toggle, .fullscreen-css-toggle, .fullscreen-js-toggle {
+  top: 15px;
+}
+.preview-mode-toggle {
+  bottom: 15px;
+}
+
+/* Settings Dialog */
+.dialog-bg {
+  z-index: 9999!important;
+  background: rgb(255, 255, 255);
+  background: rgba(255, 255, 255, 0.25);
+}
+.settings {
+  padding: 2em;
+  border-radius: 0.4em;
+  background: rgb(255, 255, 255);
+}
+.settings input .settings textarea {
+  display: block;
+  margin-left: 0;
+  margin-right: 0;
+}
+.column > div {
+  display: table;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  background: rgba(34, 66, 108, 0.5);
+  color: #fff;
+  text-align: center;
+  overflow: auto;
+  font-size: 16px;
+}
+nav {
+  display: table-cell;
+  vertical-align: middle;
+  z-index: 1;
+}
+.txtcenter {
+  text-align: center;
+}
+textarea {
+  resize: vertical;
+}
+
+/* Toggle Online Switch */
+.onoffswitch {
+  position: relative;
+  width: 90px;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select: none;
+}
+.theme-switch {
+  display: none;
+}
+.onoffswitch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid #999999;
+  border-radius: 20px;
+}
+.onoffswitch-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  -moz-transition: margin 0.3s ease-in 0s;
+  -webkit-transition: margin 0.3s ease-in 0s;
+  -o-transition: margin 0.3s ease-in 0s;
+  transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before,
+.onoffswitch-inner:after {
+  display: block;
+  float: left;
+  width: 50%;
+  height: 30px;
+  padding: 0;
+  line-height: 30px;
+  font-size: 14px;
+  color: white;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+  content: "Dark";
+  padding-left: 10px;
+  background-color: #34A7C1;
+  color: #fff;
+}
+.onoffswitch-inner:after {
+  content: "Light";
+  padding-right: 10px;
+  background-color: #EEEEEE;
+  color: #999999;
+  text-align: right;
+}
+.onoffswitch-switch {
+  display: block;
+  width: 18px;
+  margin: 6px;
+  background: #fff;
+  border: 2px solid #999999;
+  border-radius: 20px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 56px;
+  -moz-transition: all 0.3s ease-in 0s;
+  -webkit-transition: all 0.3s ease-in 0s;
+  -o-transition: all 0.3s ease-in 0s;
+  transition: all 0.3s ease-in 0s;
+}
+.theme-switch:checked + .onoffswitch-label .onoffswitch-inner {
+  margin-left: 0;
+}
+.theme-switch:checked + .onoffswitch-label .onoffswitch-switch {
+  right: 0;
+}
+
+/* Custom Checkbox Styling */
+/* Base for label styling */
+.check:not(:checked),
+.check:checked {
+  position: absolute;
+  left: -9999px;
+}
+.check:not(:checked) + label,
+.check:checked + label {
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+}
+
+/* checkbox aspect */
+.check:not(:checked) + label:before,
+.check:checked + label:before {
+  content: '';
+  position: absolute;
+  left:3px; top: 5px;
+  width: 10px; height: 10px;
+  border-radius: 3px;
+}
+/* checked mark aspect */
+.check:not(:checked) + label:after,
+.check:checked + label:after {
+  content: '✔';
+  position: absolute;
+  top: -1px; left: 5px;
+  font-size: 14px;
+  transition: all .2s;
+}
+/* checked mark aspect changes */
+.check:not(:checked) + label:after {
+  opacity: 0;
+  transform: scale(0);
+}
+.check:checked + label:after {
+  opacity: 1;
+  transform: scale(1);
+}
+/* disabled checkbox */
+.check:disabled:not(:checked) + label:before,
+.check:disabled:checked + label:before {
+  box-shadow: none;
+}
