@@ -8,450 +8,110 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/dark.css" />
     <script src="lib/jq/jquery.js"></script>
-    <script src="lib/jquery-ui.min.js"></script>
-    <script src="lib/jquery.ui.touch-punch.min.js"></script>
-    <script src="dist/jszip.min.js"></script>
-    <script src="dist/jszip-utils.js"></script>
-    <script src="dist/FileSaver.js"></script>
+    <script src="lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="lib/jquery-ui/jquery.ui.touch-punch.min.js"></script>
+    <script src="lib/jszip/jszip.min.js"></script>
+    <script src="lib/jszip/jszip-utils.js"></script>
+    <script src="lib/jszip/FileSaver.js"></script>
+    <script src="lib/alertify/alertify.min.js"></script>
   </head>
   <body>
     <!-- Opening and Closing for final index.html code -->
     <div class="hide">
-      <div class="openFinal"></div>
-      <div class="closeFinal"></div>
+      <div id="openHTML"></div>
+      <div id="siteTitle"></div>
+      <div id="closeHTML"></div>
+      <div id="closeFinal"></div>
     </div>
     
     <!-- Virtual File Menu -->
     <div class="vfileswrapper">
       <input type="text" class="vprojectname" placeholder="site title" value="site title">
+      <textarea class="hide" data-action="fullactiveeditorcode"></textarea>
+      <textarea class="hide" data-action="fullundocode"></textarea>
+      <textarea class="hide" data-action="fullredocode"></textarea>
+      <textarea class="hide" data-action="fullpreviewcode"></textarea>
+      <textarea class="hide" data-action="fulljszipcode"></textarea>
+<textarea class="calleditor hide">$(".editor-container > div").on("mouseup touchend", function() {
+</textarea>
+<textarea class="undocode hide">$("[data-action=undo]").click(function() {
+</textarea>
+<textarea class="redocode hide">$("[data-action=redo]").click(function() {
+</textarea>
+<textarea class="updatepreviewcode hide">function updatePreview() {
+  var previewFrame = document.getElementById("preview");
+  var preview =  previewFrame.contentDocument ||  previewFrame.contentWindow.document;
+  preview.open();
+</textarea>
+<textarea class="updatepreviewcode hide">
+  preview.write(openHTML.getValue() + siteTitle.getValue() + closeHTML.getValue() + yourRefs.getValue() + closeRefs.getValue() + htmlEditor.getValue() + closeFinal.getValue());
+</textarea>
+<textarea class="jszipcode hide">$("[data-action=export]").off().click(function() {
+  var zip = new JSZip();
+</textarea>
       <div class="vfiles">
         <div class="htmlEditor">
-          <a class="html-selected htmlfile">index.html</a>
-       </div>
+          <a class="html-selected htmlfile req-html">index.html</a>
+          <textarea class="calleditor hide">if ( $(this).attr("id") === "htmlEditor" ) {
+  $(".activeEditor").val("htmlEditor");
+}</textarea>
+          <textarea class="undocode hide">if ( $(".activeEditor").val() === "htmlEditor" ) {
+  htmlEditor.undo();
+}</textarea>
+          <textarea class="redocode hide">if ( $(".activeEditor").val() === "htmlEditor" ) {
+  htmlEditor.redo();
+}</textarea>
+          <textarea class="jszipcode hide">var htmlContent = openHTML.getValue() + siteTitle.getValue() + closeHTML.getValue() + yourRefs.getValue() + closeRefs.getValue() + htmlEditor.getValue() + closeFinal.getValue();
+  zip.file("index.html", htmlContent);
+</textarea>
+        </div>
         <div class="cssEditor">
-          <a class="css-selected cssfile">style.css</a>
+          <a class="css-selected cssfile req-css">style.css</a>
+          <textarea class="calleditor hide">else if ( $(this).attr("id") === "cssEditor" ) {
+  $(".activeEditor").val("cssEditor");
+}</textarea>
+          <textarea class="undocode hide"> else if ( $(".activeEditor").val() === "cssEditor" ) {
+  cssEditor.undo();
+}</textarea>
+          <textarea class="redocode hide"> else if ( $(".activeEditor").val() === "cssEditor" ) {
+  cssEditor.redo();
+}</textarea>
+          <textarea class="updatepreviewcode hide">
+  preview.write('<style' + '>' + cssEditor.getValue() + '<' + '/style' + '>');
+          </textarea>
         </div>
+          <textarea class="jszipcode hide">var cssContent = cssEditor.getValue();
+  zip.file("css/style.css", cssContent);
+</textarea>
         <div class="jsEditor">
-          <a class="js-selected jsfile">script.js</a>
+          <a class="js-selected jsfile req-js">index.js</a>
+          <textarea class="calleditor hide">else if ( $(this).attr("id") === "jsEditor" ) {
+  $(".activeEditor").val("jsEditor");
+}</textarea>
+          <textarea class="undocode hide"> else if ( $(".activeEditor").val() === "jsEditor" ) {
+  jsEditor.undo();
+}</textarea><textarea class="redocode hide"> else if ( $(".activeEditor").val() === "jsEditor" ) {
+  jsEditor.redo();
+}</textarea>
+          <textarea class="updatepreviewcode hide">
+  preview.write('<script' + '>' + jsEditor.getValue() + '<' + '/script' + '>');
+          </textarea>
+          <textarea class="jszipcode hide">var jsContent = jsEditor.getValue();
+  zip.file("js/index.js", jsContent);
+</textarea>
         </div>
-<!--
-        <div>
-          <a class="cssfile">normalize.css</a>
-          <a class="fr delfile">
-            <i class="fa fa-times"></i>
-          </a>
-          <textarea class="csscode hide">html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;}body{margin:0;}article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block;}audio,canvas,progress,video{display:inline-block;vertical-align:baseline;}audio:not([controls]){display:none;height:0;}[hidden],template{display:none;}a{background:transparent;}a:active,a:hover{outline:0;}abbr[title]{border-bottom:1px dotted;}b,strong{font-weight:bold;}dfn{font-style:italic;}h1{font-size:2em;margin:0.67em 0;}mark{background:#ff0;color:#000;}small{font-size:80%;}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline;}sup{top:-0.5em;}sub{bottom:-0.25em;}img{border:0;}svg:not(:root){overflow:hidden;}figure{margin:1em 40px;}hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0;}pre{overflow:auto;}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em;}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0;}button{overflow:visible;}button,select{text-transform:none;}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer;}button[disabled],html input[disabled]{cursor:default;}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0;}input{line-height:normal;}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0;}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto;}input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box;}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none;}fieldset{border:1px solid #c0c0c0;margin:0 2px;padding:0.35em 0.625em 0.75em;}legend{border:0;padding:0;}textarea{overflow:auto;}optgroup{font-weight:bold;}table{border-collapse:collapse;border-spacing:0;}td,th{padding:0;}</textarea><br>
-        </div>
--->
       </div>
+      <textarea class="calleditor undocode redocode hide">
+});</textarea>
       <footer>
-        <input type="text" class="vfilename fl" placeholder="n.html/n.css/n.js only">
+        <input type="text" class="vfilename fl" placeholder="n.css/n.js only">
 
         <a class="addvfile fr">
           +
         </a>
-        <span class="count hide"></span>
+        <span class="hide" data-action="count"></span>
       </footer>
     </div>
-
-    <!-- Navigation -->
-    <header>
-      <!-- Hidden Textbox (Detects Active Editor) -->
-      <input type="text" class="hide fl activeEditor" value="htmlEditor">
-
-      <!-- Float Left -->
-      <a class="tools">File</a>
-      <div class="dialog toolbox hide">
-        <a class="new-proj">
-          New Project
-        </a><br />
-        <a class="export">
-          Download as .zip
-        </a><br />
-
-        <hr />
-
-        <a class="call-settings">
-          Settings
-        </a>
-      </div>
-
-      <a class="edit">Edit</a>
-      <div class="dialog fl hide">
-        <a class="undo">
-          Undo
-        </a><br />
-        <a class="redo">
-          Redo
-        </a><br />
-        <a class="minify">
-          Minify Code
-        </a><br />
-        <a class="tidy">
-          Tidy Up Code
-        </a><br />
-        <a class="ipsum">
-          Lorem Ispum Generator
-        </a><br />
-      </div>
-      <a class="open-libraries">Libraries</a>
-      <div class="libraries-dialog dialog fl hide">
-        <div class="addlibrary-tablets">
-          <ul class="ldd-menu">
-            <li>
-              <span style="width: 75px;" class="menu-item" title="Select a CSS or JavaScript library">&nbsp;</span>
-              <div class="ldd-submenu field-shadow" style="margin-top: 7px; display: block;">
-                <ul style="border-left:none;">
-                  <li class="ldd-heading">A</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="angularjs" />
-                      <label for="angularjs">Angular JS (1.4.3)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">B</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="backbonejs" />
-                      <label for="backbonejs">Backbone JS (latest)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="bootstrap" />
-                      <label for="bootstrap">Bootstrap (latest)</label>
-                    </a>
-                    <span class="new">&nbsp; Popular !</span>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">C</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="createjs" />
-                      <label for="createjs">Create JS (latest)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="chartjs" />
-                      <label for="chartjs">Chart JS (0.2)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">D</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="d3" />
-                      <label for="d3">D3 (3.0)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="dojo" />
-                      <label for="dojo">Dojo (latest)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading no-border">E</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="ember" />
-                      <label for="ember">Ember (1.1.2)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="enyo" />
-                      <label for="enyo">Enyo JS (latest)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="extjs" />
-                      <label for="extjs">Ext JS (4.2.0)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">F</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="fabricjs" />
-                      <label for="fabricjs">Fabric JS (1.3.0)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="fontawesome" />
-                      <label for="fontawesome">FontAwesome (4.3.0)</label>
-                    </a>
-                    <span class="new">&nbsp; Popular !</span>
-                  </li>
-                </ul>
-                <ul>
-                  <li class="ldd-heading">J</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="jquery" />
-                      <label for="jquery">jQuery (latest)</label>
-                    </a>
-                    <span class="new">&nbsp; Popular !</span>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="jqueryui" />
-                      <label for="jqueryui">jQuery UI (latest)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="jquerytools" />
-                      <label for="jquerytools">jQuery (1.2.7)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="jszip" />
-                      <label for="jszip">JSZip (2.4.0)</label>
-                    </a>
-                    <span class="new">&nbsp; Popular !</span>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading no-border">K</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="kinetic" />
-                      <label for="kinetic">Kinetic JS (4.7.3)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="knockout" />
-                      <label for="knockout">Knockout JS (3.0.0)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">M</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="modernizer" />
-                      <label for="modernizer">Modernizer (latest)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="mootools" />
-                      <label for="mootools">MooTools (latest)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">N</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="normalize" />
-                      <label for="normalize">Normalize (3.0.1)</label>
-                    </a>
-                    <span class="new">&nbsp; Popular !</span>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">P</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="paperjs" />
-                      <label for="paperjs">Paper JS (0.9.9)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="processingjs" />
-                      <label for="processingjs">Processing JS (1.4.1)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="prototypejs" />
-                      <label for="prototypejs">Prototype JS (latest)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">Q</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="qooxdoo" />
-                      <label for="qooxdoo">Qooxdoo (3.0.1)</label>
-                    </a>
-                  </li>
-                </ul>
-                <ul>
-                  <li class="ldd-heading">R</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="raphaeljs" />
-                      <label for="raphaeljs">Raphael JS (2.1.0)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="requirejs" />
-                      <label for="requirejs">Require JS (2.1.16)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">S</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="scriptaculous" />
-                      <label for="scriptaculous">Script.aculo.us (latest)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="snapsvg" />
-                      <label for="snapsvg">Snap SVG (latest)</label>
-                    </a>
-                  </li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="svgjs" />
-                      <label for="svgjs">SVG JS (latest)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">T</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="threejs" />
-                      <label for="threejs">Three JS (latest)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">U</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="underscorejs" />
-                      <label for="underscorejs">Underscore JS (latest)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">W</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="webfontloader" />
-                      <label for="webfontloader">Web Font Loader (1.4.10)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">Y</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="yui" />
-                      <label for="yui">YUI (3.13.0)</label>
-                    </a>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">Z</li>
-                  <li>
-                    <a>
-                      <input class="check" type="checkbox" id="zepto" />
-                      <label for="zepto">Zepto (latest)</label>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <a class="open-demos">Demos</a>
-      <div class="demos-dialog dialog fl hide">
-        <div class="adddemos-tablets">
-          <ul class="ldd-menu">
-            <li>
-              <span style="width: 75px;" class="menu-item" title="Select a CSS or JavaScript library">&nbsp;</span>
-              <div class="ldd-submenu field-shadow" style="margin-top: 7px; display: block;">
-                <ul style="border-left:none;">
-                  <li class="ldd-heading">0</li>
-                  <li id="360deg angle slider"><a>360deg angle slider</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">A</li>
-                  <li id="alphabetizer"><a>alphabetizer</a></li>
-                  <li id="append from value"><a>append from value</a></li>
-                  <li id="applicator"><a>applicator</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">C</li>
-                  <li id="calculator"><a>calculator</a></li>
-                  <li id="catch the square"><a>catch the square</a></li>
-                  <li id="character map"><a>character map</a></li>
-                  <li id="codemirror"><a>codemirror</a></li>
-                  <li id="collapsable treeview"><a>collapsable treeview</a></li>
-                  <li id="convert for values"><a>convert for values</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">D</li>
-                  <li id="date and time"><a>date and time</a></li>
-                  <li id="detect child location"><a>detect child location</a></li>
-                  <li id="detect orientation"><a>detect orientation</a></li>
-                  <li id="discount calculator"><a>discount calculator</a></li>
-                  <li id="display operating system"><a>display operating system</a></li>
-                  <li>&nbsp;</li>
-                </ul>
-                <ul>
-                  <li class="ldd-heading">E</li>
-                  <li id="editor w prev"><a>editor w prev</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">F</li>
-                  <li id="fib sequence"><a>fib sequence</a></li>
-                  <li id="fotorama gallery"><a>fotorama gallery</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">H</li>
-                  <li id="horizontal scrollbar"><a>horizontal scrollbar</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">I</li>
-                  <li id="image viewer"><a>image viewer</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">J</li>
-                  <li id="jquery splitter"><a>jquery splitter</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">K</li>
-                  <li id="keylogger"><a>keylogger</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">M</li>
-                  <li id="multiplication table"><a>multiplication table</a></li>
-                  <li>&nbsp;</li>
-                </ul>
-                <ul>
-                  <li class="ldd-heading">N</li>
-                  <li id="new document"><a>new document</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">P</li>
-                  <li id="package zip files[jszip]"><a>package zip files[jszip]</a></li>
-                  <li id="password generator"><a>password generator</a></li>
-                  <li id="pdf embed"><a>pdf embed</a></li>
-                  <li id="poly ui kit"><a>poly ui kit</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">R</li>
-                  <li id="remember query state[slider]"><a>remember query state[slider]</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">S</li>
-                  <li id="simple slideshow"><a>simple slideshow</a></li>
-                  <li id="speech to action"><a>speech to action</a></li>
-                  <li id="svg-edit"><a>svg-edit</a></li>
-                  <li id="svg's"><a>svg's</a></li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading">W</li>
-                  <li id="web browser"><a>web browser</a></li>
-                  <li id="web designer"><a>web designer</a></li>
-                  <li id="webgl cube"><a>webgl cube</a></li>
-                  <li id="webgl first person interaction"><a>webgl first person interaction</a></li>
-                  <li id="whiteboard"><a>whiteboard</a></li>
-                  <li id="wysiwyg editor"><a>wysiwyg editor</a></li>
-              </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </header>
     
     <!-- Editor/Preview -->
     <div id="splitWrapper">
@@ -465,9 +125,6 @@
               <a class="fullscreen-html-toggle unfill">
                 <span class="fa fa-expand" id="fullscreen-html"></span>
               </a>
-              <a class="clearcode new-html">
-                <i class="fa fa-times"></i>
-              </a>
             </div>
             <div>
               <div class="editor-container css-editor">
@@ -475,9 +132,6 @@
               </div>
               <a class="fullscreen-css-toggle unfill">
                 <span class="fa fa-expand" id="fullscreen-css"></span>
-              </a>
-              <a class="clearcode new-css">
-                <i class="fa fa-times"></i>
               </a>
             </div>
           </div>
@@ -490,9 +144,6 @@
               </div>
               <a class="fullscreen-js-toggle unfill">
                 <span class="fa fa-expand" id="fullscreen-js"></span>
-              </a>
-              <a class="clearcode new-js">
-                <i class="fa fa-times"></i>
               </a>
             </div>
             <div>
@@ -507,66 +158,499 @@
         </div>
       </div>
     </div>
-
-    <!-- Settings Dialog -->
-    <div class="dialog-bg settingsdialog column hide">
+    
+    <!-- Navigation -->
+    <header class="head">
+      <!-- Hidden Textbox (Detects Active Editor) -->
+      <input type="text" class="hide fl activeEditor" value="htmlEditor">
+      
+      <!-- Menubar Icons and Dialogs -->
+      <a class="skip menubarsize hide" data-action="togglemenu">
+        <input id="toggle" type="checkbox" class="hide">
+        <label class="menu-icon pointer" for="toggle" data-action="rotatemenu">&equiv;</label>
+      </a>
+      
+      <a class="skip" data-action="newproj">New</a>
+      
+      <a class="open-libraries">Libraries</a>
+      <div class="libraries-dialog dialog fl hide">
+        <div class="hide">
+          <div id="libraries"></div>
+          <div id="closeRefs"></div>
+          <textarea class="hide" data-action="library-code" placeholder="full library's code"></textarea>
+        </div>
+        
+        <div class="addlibrary-tablets">
+          <ul class="ldd-menu">
+            <li>
+              <span style="width: 75px;" class="menu-item" title="Select a CSS or JavaScript library">&nbsp;</span>
+              <div class="ldd-submenu field-shadow" style="margin-top: 7px; display: block;">
+                <ul style="border-left:none;">
+                  <li class="ldd-heading">A</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="alertify" />
+                      <label for="alertify">Alertify JS (0.3.11)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;link rel="stylesheet" href="http://fabien-d.github.io/alertify.js/assets/js/lib/alertify/alertify.core.css" /&gt;
+&lt;link rel="stylesheet" href="http://fabien-d.github.io/alertify.js/assets/js/lib/alertify/alertify.default.css" /&gt;
+&lt;script src="http://fabien-d.github.io/alertify.js/assets/js/lib/alertify/alertify.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="angularjs" />
+                      <label for="angularjs">Angular JS (1.4.3)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">B</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="backbonejs" />
+                      <label for="backbonejs">Backbone JS (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://documentcloud.github.io/backbone/backbone-min.js"&gt;&lt;/script&gt;
+&lt;script src="http://documentcloud.github.io/underscore/underscore-min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="bootstrap" />
+                      <label for="bootstrap">Bootstrap (latest)</label>
+                    </a>
+                    <span class="new">&nbsp; Popular !</span>
+                    <div class="hide">
+                      <textarea class="hide">&lt;link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css" /&gt;
+&lt;script src="http://getbootstrap.com/dist/js/bootstrap.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">C</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="createjs" />
+                      <label for="createjs">Create JS (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://code.createjs.com/createjs-2013.09.25.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="chartjs" />
+                      <label for="chartjs">Chart JS (0.2)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">D</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="d3" />
+                      <label for="d3">D3 (3.0)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://d3js.org/d3.v3.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="dojo" />
+                      <label for="dojo">Dojo (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/dojo/1/dojo/dojo.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading no-border">E</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="ember" />
+                      <label for="ember">Ember (1.1.2)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://builds.emberjs.com/tags/v1.1.2/ember.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="enyo" />
+                      <label for="enyo">Enyo JS (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://nightly.enyojs.com/latest/enyo/enyo.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="extjs" />
+                      <label for="extjs">Ext JS (4.2.0)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://cdn.sencha.io/ext-4.2.0-gpl/ext-all.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">F</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="fabricjs" />
+                      <label for="fabricjs">Fabric JS (1.3.0)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.3.0/fabric.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="fontawesome" />
+                      <label for="fontawesome">FontAwesome (4.3.0)</label>
+                    </a>
+                    <span class="new">&nbsp; Popular !</span>
+                    <div class="hide">
+                      <textarea class="hide">&lt;link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" /&gt;</textarea>
+                    </div>
+                  </li>
+                </ul>
+                <ul>
+                  <li class="ldd-heading">J</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="jquery" />
+                      <label for="jquery">jQuery (latest)</label>
+                    </a>
+                    <span class="new">&nbsp; Popular !</span>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://code.jquery.com/jquery-latest.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="jqueryui" />
+                      <label for="jqueryui">jQuery UI (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css" /&gt;
+&lt;script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://raw.githubusercontent.com/furf/jquery-ui-touch-punch/master/jquery.ui.touch-punch.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="jquerytools" />
+                      <label for="jquerytools">jQuery Tools (1.2.7)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="jszip" />
+                      <label for="jszip">JSZip (2.4.0)</label>
+                    </a>
+                    <span class="new">&nbsp; Popular !</span>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://stuk.github.io/jszip/dist/jszip.min.js"&gt;&lt;/script&gt;
+&lt;script src="http://stuk.github.io/jszip-utils/dist/jszip-utils.js"&gt;&lt;/script&gt;
+&lt;script src="http://stuk.github.io/jszip/vendor/FileSaver.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading no-border">K</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="kinetic" />
+                      <label for="kinetic">Kinetic JS (4.7.3)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.3.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="knockout" />
+                      <label for="knockout">Knockout JS (3.0.0)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://knockoutjs.com/downloads/knockout-3.0.0.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">M</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="modernizer" />
+                      <label for="modernizer">Modernizer (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://modernizr.com/downloads/modernizr-latest.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="mootools" />
+                      <label for="mootools">MooTools (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/mootools/1/mootools-yui-compressed.js"&gt;&lt;/script&gt;
+&lt;script src="http://modernizr.com/downloads/modernizr-latest.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">N</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="normalize" />
+                      <label for="normalize">Normalize (3.0.1)</label>
+                    </a>
+                    <span class="new">&nbsp; Popular !</span>
+                    <div class="hide">
+                      <textarea class="hide">&lt;link rel="stylesheet" href="http://necolas.github.io/normalize.css/3.0.1/normalize.css" /&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">P</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="paperjs" />
+                      <label for="paperjs">Paper JS (0.9.9)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.9/paper.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="processingjs" />
+                      <label for="processingjs">Processing JS (1.4.1)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://cloud.github.com/downloads/processing-js/processing-js/processing-1.4.1.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="prototypejs" />
+                      <label for="prototypejs">Prototype JS (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/prototype/1/prototype.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">Q</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="qooxdoo" />
+                      <label for="qooxdoo">Qooxdoo (3.0.1)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://demo.qooxdoo.org/3.0.1/framework/q-3.0.1.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                </ul>
+                <ul>
+                  <li class="ldd-heading">R</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="raphaeljs" />
+                      <label for="raphaeljs">Raphael JS (2.1.0)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="requirejs" />
+                      <label for="requirejs">Require JS (2.1.16)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://requirejs.org/docs/release/2.1.16/minified/require.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">S</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="scriptaculous" />
+                      <label for="scriptaculous">Script.aculo.us (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/scriptaculous/1/scriptaculous.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="snapsvg" />
+                      <label for="snapsvg">Snap SVG (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://snapsvg.io/assets/js/snap.svg-min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="svgjs" />
+                      <label for="svgjs">SVG JS (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="https://raw.github.com/wout/svg.js/master/dist/svg.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">T</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="threejs" />
+                      <label for="threejs">Three JS (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://threejs.org/build/three.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">U</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="underscorejs" />
+                      <label for="underscorejs">Underscore JS (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://underscorejs.org/underscore-min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">W</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="webfontloader" />
+                      <label for="webfontloader">Web Font Loader (1.4.10)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">Y</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="yui" />
+                      <label for="yui">YUI (3.13.0)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://yui.yahooapis.com/3.13.0/build/yui/yui-min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">Z</li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="zepto" />
+                      <label for="zepto">Zepto (latest)</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="hide">&lt;script src="http://zeptojs.com/zepto.min.js"&gt;&lt;/script&gt;</textarea>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <a class="skip" data-action="export">Export .zip</a>
+      <a class="skip" data-action="save">Save to Cloud</a>
+      
+      <a class="skip" data-action="undo">
+        <i class="fa fa-undo"></i>
+      </a>
+      <a class="skip" data-action="redo">
+        <i class="fa fa-repeat"></i>
+      </a>
+    </header>
+    
+    <!-- New Project Dialog -->
+    <div class="dialog-bg column hide" data-action="newprojdialog">
       <div>
         <nav>
           <div class="grid settings">
-            <form class="form">
-              <h4>
-                Theme:
-              </h4>
-
-              <p class="onoffswitch">
-                <input type="checkbox" name="onoffswitch" class="theme-switch" id="myonoffswitch" checked>
-                <label class="onoffswitch-label" for="myonoffswitch">
-                  <span class="onoffswitch-inner"></span>
-                  <span class="onoffswitch-switch"></span>
-                </label>
-              </p>
-            </form>
-
+            <p class="txtcenter">
+              Do you wish to create a new project? <br /> 
+              Once you do so you will loose all your work.
+            </p>
+            
             <div class="txtcenter">
-              <a class="btn--default close">Close</a>
+              <a class="btn--default" data-action="confirm-newproj">Confirm</a>
+              <a class="btn--warning" data-action="cancel-newproj">Cancel</a>
             </div>
           </div>
         </nav>
       </div>
     </div>
-
+    
+    <!-- Apply Script Dynamically, After Elements Are Loaded -->
+    <textarea class="updatepreviewcode hide">
+  preview.close();
+}
+setTimeout(updatePreview, 300);
+</textarea>
+    <textarea class="jszipcode hide">
+  var content = zip.generate({type:"blob"});
+  // see FileSaver.js
+  saveAs(content, $(".vprojectname").val().replace(/ /g,'-') + ".zip");
+  return false;
+});
+</textarea>
+    <div id="applyactiveeditorcode"></div>
+    <div id="applyundocode"></div>
+    <div id="applyredocode"></div>
+    <div id="applynewproject"></div>
+    <div id="applyfullpreview"></div>
+    <div id="applyjszip"></div>
+    
     <script src="jqwidgets/jqxcore.js"></script>
     <script src="jqwidgets/jqxsplitter.js"></script>
 
-    <script src="lib/codemirror.js"></script>
-    <script src="javascripts/code-completion.js"></script>
-    <script src="javascripts/css-completion.js"></script>
-    <script src="javascripts/html-completion.js"></script>
-    <script src="mode/javascript/javascript.js"></script>
-    <script src="mode/xml/xml.js"></script>
-    <script src="mode/css/css.js"></script>
-    <script src="mode/htmlmixed/htmlmixed.js"></script>
-    <script src="addon/edit/closetag.js"></script>
-    <script src="addon/edit/matchbrackets.js"></script>
-    <script src="addon/selection/active-line.js"></script>
-    <script src="addon/fold/foldcode.js"></script>
-    <script src="addon/fold/foldgutter.js"></script>
-    <script src="addon/fold/brace-fold.js"></script>
-    <script src="addon/fold/xml-fold.js"></script>
-    <script src="addon/fold/comment-fold.js"></script>
-    <script src="addon/search/search.js"></script>
-    <script src="addon/search/searchcursor.js"></script>
-    <script src="addon/dialog/dialog.js"></script>
-    <script src="addon/formatting.js"></script>
+    <script src="codemirror/codemirror.js"></script>
+    <script src="codemirror/javascripts/code-completion.js"></script>
+    <script src="codemirror/javascripts/css-completion.js"></script>
+    <script src="codemirror/javascripts/html-completion.js"></script>
+    <script src="codemirror/mode/javascript/javascript.js"></script>
+    <script src="codemirror/mode/xml/xml.js"></script>
+    <script src="codemirror/mode/css/css.js"></script>
+    <script src="codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="codemirror/addon/edit/closetag.js"></script>
+    <script src="codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="codemirror/addon/selection/active-line.js"></script>
+    <script src="codemirror/addon/fold/foldcode.js"></script>
+    <script src="codemirror/addon/fold/foldgutter.js"></script>
+    <script src="codemirror/addon/fold/brace-fold.js"></script>
+    <script src="codemirror/addon/fold/xml-fold.js"></script>
+    <script src="codemirror/addon/fold/comment-fold.js"></script>
+    <script src="codemirror/addon/search/search.js"></script>
+    <script src="codemirror/addon/search/searchcursor.js"></script>
+    <script src="codemirror/addon/dialog/dialog.js"></script>
+    <script src="codemirror/addon/formatting.js"></script>
 
-    <script src="lib/jshint.js"></script>
-    <script src="lib/csslint.js"></script>
-    <script src="addon/lint/lint.js"></script>
-    <script src="addon/lint/javascript-lint.js"></script>
-    <script src="addon/lint/css-lint.js"></script>
-    <script src="alertify/alertify.min.js"></script>
+    <script src="codemirror/jshint.js"></script>
+    <script src="codemirror/csslint.js"></script>
+    <script src="codemirror/addon/lint/lint.js"></script>
+    <script src="codemirror/addon/lint/javascript-lint.js"></script>
+    <script src="codemirror/addon/lint/css-lint.js"></script>
+    <script src="lib/inlet.js"></script>
 
-    <script src="lib/spectrum.js"></script>
     <script src="lib/shortcut.js"></script>
     <script src="main.js"></script>
     <script src="editor.js"></script>

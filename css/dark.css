@@ -35,7 +35,7 @@
 }
 
 /* Menubar */
-header {
+.head {
   color: rgb(180, 214, 220);
   background: #282C34;
   border-bottom: 1px solid #525252;
@@ -52,10 +52,10 @@ header {
   background: rgb(40, 44, 52);
   border: 1px solid #525252;
 }
-header a, .dialog a {
+.head a, .dialog a {
   color: #72B0BB;
 }
-header a:hover, .dialog a:hover {
+.head a:hover, .dialog a:hover {
   color: #fff;
 }
 .vfileswrapper footer a {
@@ -98,7 +98,7 @@ header a:hover, .dialog a:hover {
   border-bottom: 1px solid #BF8454;
 }
 
-ul.ldd-menu ul li a:hover{
+.ldd-menu ul li a:hover{
   color: #fff;
 /*
   background: #0080FF;

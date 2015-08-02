@@ -1,16 +1,16 @@
 @import url("normalize.css");
 @import url("fonts/font-awesome.css");
-@import url("../lib/jquery-ui.css");
-@import url("../lib/codemirror.css");
-@import url("../addon/fold/foldgutter.css");
-@import url("../addon/lint/lint.css");
-@import url("../lib/spectrum.css");
-@import url("../alertify/themes/alertify.core.css");
-@import url("../alertify/themes/alertify.default.css");
+@import url("../lib/jquery-ui/jquery-ui.css");
+@import url("../codemirror/codemirror.css");
+@import url("../codemirror/addon/fold/foldgutter.css");
+@import url("../codemirror/addon/lint/lint.css");
+@import url("../lib/alertify/themes/alertify.core.css");
+@import url("../lib/alertify/themes/alertify.default.css");
 @import url("../jqwidgets/styles/jqx.base.css");
 @import url("../jqwidgets/styles/jqx.metro.css");
 @import url("../jqwidgets/styles/jqx.metrodark.css");
-@import url("../addon/dialog/dialog.css");
+@import url("../codemirror/addon/dialog/dialog.css");
+@import url("inlet.css");
 @import url("polyui.css");
 
 @font-face {
@@ -29,7 +29,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
 }
-a {
+a, .pointer {
   cursor: pointer;
 }
 a:active, a:focus {
@@ -40,6 +40,7 @@ a:active, a:focus {
 .vfileswrapper {
   position: absolute;
   top: 0;
+  left: 250px;
   width: 250px;
   left: 0;
   bottom: 0;
@@ -57,6 +58,7 @@ a:active, a:focus {
   left: 5px;
   right: 15px;
   bottom: 40px;
+  overflow: auto;
 }
 .vfiles a {
   font: 13px Lato;
@@ -92,15 +94,23 @@ a:active, a:focus {
 }
 
 /* Menubar */
-header {
+.head {
   position: absolute;
   top: 0;
   left: 250px;
   right: 0;
+  width: auto;
   height: 24px;
   padding: 10px 5px 0 5px;
 }
-header a {
+@media all and (max-width:830px) {
+  .head {
+    left: 0;
+    right: auto;
+    width: 100%;
+  }
+}
+.head a {
   cursor: pointer;
   text-decoration: none;
   padding: 0 5px 8px 5px;
@@ -116,7 +126,7 @@ a:active {
 .fr, #add-library {
   float: right;
 }
-.fl, header a {
+.fl, .head a {
   float: left;
 }
 .fn {
@@ -127,6 +137,18 @@ a:active {
 }
 .hide {
   display: none;
+}
+.menubarsize {
+  font-size: 30px!important;
+  margin: -10px 0 0 0!important;
+  padding: 0;
+}
+.menubarsize {
+  -webkit-transition: -webkit-transform .4s ease-out;
+     -moz-transition:    -moz-transform .4s ease-out;
+      -ms-transition:     -ms-transform .4s ease-out;
+       -o-transition:      -o-transform .4s ease-out;
+          transition:         transform .4s ease-out;
 }
 
 /* Dialogs */
@@ -141,48 +163,48 @@ a:active {
   padding: 5px;
   text-align: center;
   overflow: auto;
-  z-index: 100;
 }
 
 /* Click Add Libraries or Demos In Dialog */
-.libraries-dialog a, .demos-dialog a {
+.libraries-dialog a {
   margin: 0;
 }
-.libraries-dialog, .demos-dialog {
+.libraries-dialog {
   overflow-x: hidden;
 }
-.addlibrary-tablets, .adddemos-tablets {
+.addlibrary-tablets {
   display: block;
   text-align: left;
   width: 600px;
 }
 
-.addlibrary-tablets li a, .adddemos-tablets li a {
+.addlibrary-tablets li a {
   float: none;
   text-align: left;
   text-transform: capitalize;
 }
 
-ul.ldd-menu {
+.ldd-menu {
   font-size: 13px;
   list-style: none;
   padding: 0;
 }
 
-ul.ldd-menu .ldd-submenu {
+.ldd-menu .ldd-submenu {
   font-size: 10px;
 }
 
-ul.ldd-menu label {
+.ldd-menu label {
   padding-top: 5px;
   margin: -5px;
 }
 
-ul.ldd-menu ul li a:hover{
+.ldd-menu ul li a:hover{
   font-weight: normal;
 }
 
-ul.ldd-menu ul {
+.ldd-menu ul {
+  display: inline-block;
   list-style: outside none none;
   float: left;
   border-left: 1px solid #DDD;
@@ -198,7 +220,7 @@ ul.ldd-menu ul {
   color: #0080FF;
 }
 
-ul.ldd-menu ul li a {
+.ldd-menu ul li a {
   font-family: Arial, serif;
   font-size: 11px;
   line-height: 20px;
@@ -211,14 +233,22 @@ ul.ldd-menu ul li a {
   font-size: 10px;
 }
 
-@media all and (max-width:680px) {
-  .addlibrary-tablets, .adddemos-tablets {
-    display: none;
+@media all and (max-width:924px) {
+  .addlibrary-tablets {
+    width: 100%;
+  }
+  
+  .ldd-menu ul {
+    display: block!important;
+    border-left: 0!important;
+    border-top: 1px solid #DDD!important;
+    margin: 0!important;
+    width: 100%!important;
   }
 }
 
 /* Editor */
-#splitContainer, .CodeMirror {
+#splitWrapper, #splitContainer, .CodeMirror, .fullscreen-html-toggle, .fullscreen-css-toggle, .fullscreen-js-toggle, .preview-mode-toggle {
   z-index: 0;
 }
 .CodeMirror {
@@ -236,8 +266,17 @@ ul.ldd-menu ul li a {
   position: absolute;
   top: 35px;
   left: 250px;
+  width: auto;
   right: 0;
   bottom: 0;
+  box-shadow: 0 0 200em #93969A;
+}
+@media all and (max-width:830px) {
+  #splitWrapper {
+    left: 0;
+    right: auto;
+    width: 100%;
+  }
 }
 #splitContainer {
   position: absolute;
@@ -290,25 +329,14 @@ ul.ldd-menu ul li a {
   background-image: url("../js.svg");
 }
 
-.clearcode {
-  display: block;
-  position: absolute;
-  top: 50px;
-  right: 18px;
-  opacity: 0.6;
-  font-size: 24px;
-  z-index: 0;
-}
-
 .fullscreen-html-toggle, .fullscreen-css-toggle, .fullscreen-js-toggle, .preview-mode-toggle {
   display: block;
   position: absolute;
   right: 20px;
   opacity: 0.6;
   font-size: 1.75em;
-  z-index: 0;
 }
-.fullscreen-html-toggle:hover, .fullscreen-css-toggle:hover, .fullscreen-js-toggle:hover, .preview-mode-toggle:hover, .clearcode:hover {
+.fullscreen-html-toggle:hover, .fullscreen-css-toggle:hover, .fullscreen-js-toggle:hover, .preview-mode-toggle:hover {
   opacity: 1;
 }
 .fullscreen-html-toggle, .fullscreen-css-toggle, .fullscreen-js-toggle {
@@ -320,7 +348,7 @@ ul.ldd-menu ul li a {
 
 /* Settings Dialog */
 .dialog-bg {
-  z-index: 9999!important;
+  z-index: 99999999999!important;
   background: rgb(255, 255, 255);
   background: rgba(255, 255, 255, 0.25);
 }
@@ -349,7 +377,6 @@ ul.ldd-menu ul li a {
 nav {
   display: table-cell;
   vertical-align: middle;
-  z-index: 1;
 }
 .txtcenter {
   text-align: center;

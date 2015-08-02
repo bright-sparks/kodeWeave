@@ -27,7 +27,7 @@
 /* Virtual File List */
 .vfileswrapper {
   color: #666;
-  background: ##EFEFEF;
+  background: #EFEFEF;
 }
 .vfileswrapper .selected {
   background: #2882CA;
@@ -52,7 +52,7 @@
 
 
 /* Menubar */
-header {
+.head {
   background: #fff;
 /*
   background: #2882CA;
@@ -68,13 +68,13 @@ header {
   border: 1px solid #BDBDBD;
   background: #fff;
 }
-header a {
+.head a {
   color: #333;
 /*
   color: #ccc;
 */
 }
-header a:hover {
+.head a:hover {
   color: #000;
 /*
   color: #fff;
@@ -135,7 +135,7 @@ header a:hover {
   border-bottom: 1px solid #BF8454;
 }
 
-ul.ldd-menu ul li a:hover{
+.ldd-menu ul li a:hover{
   color: #0080FF;
 /*
   background: #0080FF;

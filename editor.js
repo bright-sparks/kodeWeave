@@ -1,40 +1,117 @@
 $(document).ready(function() {
-  var counter = 0;
-
-  $(window).load(function() {
-    // Find Theme Onload
-    if ( $(".theme-switch").is(":checked") ) {
-      $('link[href="css/light.css"]').attr('href','css/dark.css');
-      $('#splitContainer, #leftSplitter, #rightSplitter').jqxSplitter({
-        theme: 'metrodark'
-      });
+  var counter = 0,
+      activeEditor = $(".activeEditor");
+  
+  // Toggle Visibility of Add/Remove Files
+  $("#toggle").on("change", function() {
+    if ( $(this).is(":checked") ) {
+      if ( $(window).width() < 830 ) {
+        $(".head, #splitWrapper").animate({
+          left: "250px",
+          right: "auto",
+          width: "100%"
+        }, 200);
+      } else {
+        $(".head, #splitWrapper").css({
+          left: "",
+          right: "",
+          width: ""
+        });
+      }
+      $(".menubarsize").css("transform", "rotate(90deg) translate(-3px, 2px)");
     } else {
-      $('link[href="css/dark.css"]').attr('href','css/light.css');
-      $('#splitContainer, #leftSplitter, #rightSplitter').jqxSplitter({
-        theme: 'metro'
-      });
+      if ( $(window).width() < 830 ) {
+        $(".head, #splitWrapper").animate({
+          left: "0",
+          right: "auto",
+          width: "100%"
+        }, 200);
+      } else {
+        $(".head, #splitWrapper").css({
+          left: "",
+          right: "",
+          width: ""
+        });
+      }
+      $(".menubarsize").css("transform","rotate(0deg) translate(0, 0)" );
     }
-  }).on("load resize", function() {
-    if ( $(this).width() < 681 ) {
-      if ( $(this).height() < 600 ) {
+    $("#splitContainer").delay("350").jqxSplitter({
+      height: "auto",
+      width: "100%",
+      orientation: "horizontal",
+      showSplitBar: true,
+      panels: [{ size: "50%",collapsible:false },
+               { size: "50%" }]
+    });
+    $("#leftSplitter").delay("350").jqxSplitter({
+      height: "100%",
+      width: "100%",
+      orientation: "vertical",
+      showSplitBar: true,
+      panels: [{ size: "50%",collapsible:false },
+               { size: "50%"}]
+    });
+    $("#rightSplitter").delay("350").jqxSplitter({
+      height: "100%",
+      width: "100%",
+      orientation: "vertical",
+      showSplitBar: true,
+      panels: [{ size: "50%"},
+               { size: "50%",collapsible:false }]
+    });
+  });
+  $("#toggle").trigger("change");
+  
+  $(window).on("load resize", function() {
+    $("#splitContainer, #leftSplitter, #rightSplitter").jqxSplitter({
+      theme: "metrodark"
+    });
+    
+    // Grid Alignment Based Upon Resolution
+    if ( $(this).width() > 830 ) {
+      if ( !$("#toggle").is(":checked") ) {
+        $("#toggle").trigger("click");
+      }
+      $(".head, #splitWrapper").css({
+        left: "",
+        right: "",
+        width: ""
+      });
+      $(".menubarsize").addClass("hide");
+    } else {
+      if ( $("#toggle").is(":checked") ) {
+        $("#toggle").trigger("click");
+      }
+      $(".menubarsize").removeClass("hide");
+    }
+    
+    // Dropdown Styles
+    if ( $(this).width() > 924 ) {
+      if ( $(this).height() > 552 ) {
         $(".libraries-dialog, .demos-dialog").css({
+          "width": "auto",
           "height": "auto",
+          "overflow-y": "auto"
+        });
+      } else {
+        $(".libraries-dialog, .demos-dialog").css({
+          "width": "auto",
+          "height": $(window).height() - 100 + "px",
           "overflow-y": "auto"
         });
       }
     } else {
-      if ( $(this).height() < 600 ) {
+      if ( $(this).height() < 552 ) {
         $(".libraries-dialog, .demos-dialog").css({
-          "height": $(this).height() - 80 + "px",
+          "width": $(window).width() - 350 + "px",
+          "height": $(window).height() - 100 + "px",
           "overflow-y": "auto"
-        });
-      } else if ( $(this).height() < 630 ) {
-        $(".libraries-dialog, .demos-dialog").css({
-          "height": "auto"
         });
       } else {
         $(".libraries-dialog, .demos-dialog").css({
-          "height": "auto"
+          "width": $(window).width() - 350 + "px",
+          "height": $(window).height() - 100 + "px",
+          "overflow-y": "auto"
         });
       }
     }
@@ -44,22 +121,19 @@ $(document).ready(function() {
   $(function() {
     // Apply Site Title
     $(".vprojectname").on("keyup change", function() {
-      $(".addsitetitle").html( $(this).val() );
-      $(".finalCode").setValue( $(".mirrorcode").html() ).trigger("change");
+      siteTitle.setValue( $(this).val() );
     });
-    $(".addsitetitle").html( $(this).val() );
-    $(".indexcode").html( htmlEditor.getValue() );
 
     function SelectFile() {
       // Selects a new file
       $(".vfiles a").on("click", function() {
         if ( $(this).hasClass("htmlfile") ) {
           if ( $(".html-selected").is(":visible") ) {
-            $(".html-selected").removeClass("html-selected");
-            $(".html-editor > div").addClass("hide");
-            $("#" + $(this).parent().attr("class") ).removeClass("hide");
+            // $(".html-selected").removeClass("html-selected");
+            // $(".html-editor > div").addClass("hide");
+            // $("#" + $(this).parent().attr("class") ).removeClass("hide");
           }
-          $(this).addClass("html-selected");
+          // $(this).addClass("html-selected");
         } else if ( $(this).hasClass("cssfile") ) {
           if ( $(".css-selected").is(":visible") ) {
             $(".css-selected").removeClass("css-selected");
@@ -67,6 +141,7 @@ $(document).ready(function() {
             $("#" + $(this).parent().attr("class") ).removeClass("hide");
           }
           $(this).addClass("css-selected");
+          $("#" + $(this).parent().attr("class") ).removeClass("hide");
         } else if ( $(this).hasClass("jsfile") ) {
           if ( $(".js-selected").is(":visible") ) {
             $(".js-selected").removeClass("js-selected");
@@ -74,49 +149,100 @@ $(document).ready(function() {
             $("#" + $(this).parent().attr("class") ).removeClass("hide");
           }
           $(this).addClass("js-selected");
+          $("#" + $(this).parent().attr("class") ).removeClass("hide");
         }
         return false;
       });
+      // Detect Active Editor
+      $("[data-action=fullactiveeditorcode]").val(function() {
+        return $.map($(".calleditor"), function (el) {
+          return el.value;
+        }).join("");
+      });
+
+      // Undo Code Script (Applied dynamically from HTML div )
+      $("[data-action=fullundocode]").val(function() {
+        return $.map($(".undocode"), function (el) {
+          return el.value;
+        }).join("");
+      });
+      // Redo Code Script (Applied dynamically from HTML div )
+      $("[data-action=fullredocode]").val(function() {
+        return $.map($(".redocode"), function (el) {
+          return el.value;
+        }).join("");
+      });
+      // Update Preview Script (Applied dynamically from HTML div )
+      $("[data-action=fullpreviewcode]").val(function() {
+        return $.map($(".updatepreviewcode"), function (el) {
+          return el.value;
+        }).join("");
+      });
+      // Update JSZip (Applied dynamically from HTML div )
+      $("[data-action=fulljszipcode]").val(function() {
+        return $.map($(".jszipcode"), function (el) {
+          return el.value;
+        }).join("");
+      });
+
+      // Apply Update Code
+      $("#applyfullpreview").html("").append( "<script>" + $("[data-action=fullpreviewcode]").val() + "<" + "/script>" );
+
+      // Call Active Editor      
+      $("#applyactiveeditorcode").html("").append( "<script>" + $("[data-action=fullactiveeditorcode]").val() + "<" + "/script>" );
+
+      // Initiate Undo/Redo Buttons
+      $("#applyundocode").html("").append( "<script>" + $("[data-action=fullundocode]").val() + "<" + "/script>" );
+      $("#applyredocode").html("").append( "<script>" + $("[data-action=fullredocode]").val() + "<" + "/script>" );
+      
+      // Apply Export Function
+      $("#applyjszip script").remove();
+      $("#applyjszip").html("").append( "<script>" + $("[data-action=fulljszipcode]").val() + "<" + "/script>" );
+
       return false;
     }
     SelectFile();
     
-    // Adds a new file
+    // Adds a new custom file
     $(".addvfile").click(function() {
-      $(".count").html(counter++);
+      $("[data-action=count]").html(counter++);
       
-      var count = $(".count").html();
+      var count = $("[data-action=count]").html();
       var $val = $(".vfilename").val();
       var myjs = ".js";
       var findJS = myjs.substr(myjs.length - 3); // => ".js"
       var mycss = ".css";
       var findCSS = mycss.substr(mycss.length - 4); // => ".css"
-      var htmlfile = '<a class="htmlfile ' + count + '">'+ $val.toLowerCase() +'</a> <a class="delfile fr"><i class="fa fa-times"></i></a>';
-      var cssfile = '<a class="cssfile ' + count + '">'+ $val.toLowerCase() +'</a> <a class="delfile fr"><i class="fa fa-times"></i></a>';
-      var jsfile = '<a class="jsfile ' + count + '">'+ $val.toLowerCase() +'</a> <a class="delfile fr"><i class="fa fa-times"></i></a>';
+      // var htmlfile = '<a class="htmlfile" data-action="htmlfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+      var cssfile = '<a class="cssfile" data-action="cssfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+      var jsfile = '<a class="jsfile" data-action="jsfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
       
-      var htmlCodemirror = 'var htmlEditor'+ count +' = CodeMirror(document.getElementById("htmlfile'+ count +'"), {  mode: "text/html",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],  value: "<!-- comment -->"});';
-      var htmlLintMarkers = '';
-      var htmlActiveEditor = '';
-      var cssCodemirror = 'var cssEditor'+ count +' = CodeMirror(document.getElementById("cssfile'+ count +'"), {  mode: "text/css",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "/* comment */"});';
-      var cssLintMarkers = '';
-      var cssActiveEditor = '';
-      var jsCodemirror = 'var jsEditor'+ count +' = CodeMirror(document.getElementById("jsfile'+ count +'"), {  mode: "text/javascript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "// comment "});';
-      var jsLintMarkers = '';
-      var jsActiveEditor = '';
+      // var htmlCodemirror = 'var htmlEditor'+ count +' = CodeMirror(document.getElementById("htmlfile'+ count +'"), {  mode: "text/html",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],  value: "<!-- comment -->"});';
+      var cssCodemirror = 'var cssEditor'+ count +' = CodeMirror(document.getElementById("cssfile'+ count +'"), {  mode: "text/css",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "/* comment */"}); var inlet = Inlet(cssEditor'+ count +'); cssEditor'+ count +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); cssEditor'+ count +'.on("drop", function() { cssEditor'+ count +'.setValue(""); });';
+      var cssActiveEditor = '$("#cssfile'+ count +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "cssfile'+ count +'" ) { $(".activeEditor").val("cssfile'+ count +'"); } });';
+      var cssUndo = "<textarea class='undocode hide'> else if ( $('.activeEditor').val() === 'cssfile"+ count +"' ) { cssEditor"+ count + ".undo(); $('.edit.active').trigger('click'); }</textarea>";
+      var cssRedo = "<textarea class='redocode hide'> else if ( $('.activeEditor').val() === 'cssfile"+ count +"' ) { cssEditor"+ count + ".redo(); $('.edit.active').trigger('click'); }</textarea>";
+      var cssUpdate = "<textarea class='updatepreviewcode hide'>\npreview.write('<style' + '>' + cssEditor"+ count +".getValue() + '<' + '/style' + '>');\n</textarea>";
+      var cssJSZip = "<textarea class='jszipcode hide'>zip.file('css/"+ $val.toLowerCase() +"', cssEditor"+ count +".getValue()); </textarea>";
+      var jsCodemirror = 'var jsEditor'+ count +' = CodeMirror(document.getElementById("jsfile'+ count +'"), {  mode: "text/javascript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "// comment"}); var inlet = Inlet(jsEditor'+ count +'); jsEditor'+ count +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); jsEditor'+ count +'.on("drop", function() { jsEditor'+ count +'.setValue(""); }); ';
+      
+      var jsActiveEditor = '$("#jsfile'+ count +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "jsfile'+ count +'" ) { $(".activeEditor").val("jsfile'+ count +'"); } });';
+      // var jsActiveEditor = "<textarea class='calleditor hide'>if ( $(this).attr('id') === 'jsfile"+ count +"' ) { $('.activeEditor').val('jsfile"+ count +"'); }</textarea>";
+      var jsUndo = "<textarea class='undocode hide'> else if ( $('.activeEditor').val() === 'jsfile"+ count +"' ) { jsEditor"+ count + ".undo(); $('.edit.active').trigger('click'); }</textarea>";
+      var jsRedo = "<textarea class='redocode hide'> else if ( $('.activeEditor').val() === 'jsfile"+ count +"' ) { jsEditor"+ count + ".redo(); $('.edit.active').trigger('click'); }</textarea>";
+      var jsUpdate = "<textarea class='updatepreviewcode hide'>\npreview.write('<script' + '>' + jsEditor"+ count +".getValue() + '<' + '/script' + '>');\n</textarea>";
+      var jsJSZip = "<textarea class='jszipcode hide'>zip.file('js/"+ $val.toLowerCase() +"', jsEditor"+ count +".getValue()); </textarea>";
       
       if ($val.toLowerCase().substring($val.length - 5) === ".html") {
-        $(".html-editor").append( '<div id="htmlfile'+ count + '" class="htmlfile' + count + '"></div>' );
-        $(".vfiles").append( '<div class="htmlfile' + count + '">'+ htmlfile +'<script>' + htmlCodemirror + '<' + '/script></div>' );
-        alertify.error("New HTML files are not yet ready!");
+        // $(".html-editor").append( '<div id="htmlfile'+ count + '" class="htmlfile' + count + '"></div>' );
+        // $(".vfiles").append( '<div class="htmlfile' + count + '">'+ htmlfile +'<script>' + htmlCodemirror + '<' + '/script></div>' );
+        // alertify("NOTE: The live preview only applies to index.html");
       } else if ($val.toLowerCase().substring($val.length - 4) === ".css") {
         $(".css-editor").append( '<div id="cssfile'+ count + '" class="cssfile' + count + '"></div>' );
-        $(".vfiles").append( '<div class="cssfile' + count + '">'+ cssfile +'<script>' + cssCodemirror + '<' + '/script></div>' );
-        alertify.success("You've added a CSS Library");
+        $(".vfiles").append( '<div class="cssfile' + count + '">'+ cssfile +'<script>var activeEditor = $(".activeEditor"); ' + cssCodemirror + cssActiveEditor + '<' + '/script>'+ cssUndo + cssRedo + cssUpdate + cssJSZip + '</div>' );
       } else if ($val.toLowerCase().substring($val.length - 3) === ".js") {
         $(".js-editor").append( '<div id="jsfile'+ count + '" class="jsfile' + count + '"></div>' );
-        $(".vfiles").append( '<div class="jsfile' + count + '">'+ jsfile +'<script>' + jsCodemirror + '<' + '/script></div>' );
-        alertify.success("You've added a JS Library");
+        $(".vfiles").append( '<div class="jsfile' + count + '">'+ jsfile + '<script>var activeEditor = $(".activeEditor"); ' + jsCodemirror + jsActiveEditor + '<' + '/script>'+ jsUndo + jsRedo + jsUpdate + jsJSZip + '</div>' );
       } else {
         alertify.error("Houston we have a problem!");
       }
@@ -125,7 +251,7 @@ $(document).ready(function() {
       $(".vfilename").val("");
 
       // Delete Virtual File
-      $(".delfile").on("click", function() {
+      $("[data-action=delfile]").on("click", function() {
         $("#" + $(this).parent().attr("class") ).remove();
         if ( $(this).prev().hasClass("htmlfile") ) {
           if ( $(this).prev().hasClass("html-selected") ) {
@@ -147,7 +273,7 @@ $(document).ready(function() {
           }
         }
         $(this).parent().remove();
-z      });
+      });
     });
     $(".vfilename").keyup(function(e) {
       if ( e.keyCode == 13 ) {
@@ -155,37 +281,33 @@ z      });
       }
     });
   });
+  
+  // Add/Remove Libraries
+  $("[data-action=check]").on("change", function() {
+    var textarea = $("[data-action=library-code]");
+    var value = $(this).parent().nextAll("div").children("textarea:first").val() + "\n";
 
-  // Settings & Theme
-  $(".call-settings").click(function() {
-    $(".settingsdialog").fadeIn();
-    $(".tools.active").trigger("click");
-  });
-  $(".close").click(function() {
-    $(".settingsdialog").fadeOut();
-    $(".tools.active").trigger("click");
-  });
-  $(".theme-switch").on("click change", function() {
-    if ( $(".theme-switch").is(":checked") ) {
-      $('link[href="css/light.css"]').attr("href","css/dark.css");
-      $('#splitContainer, #leftSplitter, #rightSplitter').jqxSplitter({
-        theme: "metrodark"
-      });
+    if ( $(this).prop("checked") === true ) {
+      textarea.val( textarea.val() + value );
+      yourRefs.setValue( textarea.val() );
     } else {
-      $('link[href="css/dark.css"]').attr("href","css/light.css");
-      $("#splitContainer, #leftSplitter, #rightSplitter").jqxSplitter({
-        theme: "metro"
-      });
+      textarea.val( textarea.val().replace( value, "") );
+      yourRefs.setValue( textarea.val() );
     }
   });
   
+  // Save to browser
+  $("[data-action=save]").click(function() {
+    alertify.error("Not yet available...");
+  });
+  
   // Dialog Dropdown
-  $("header a:not(#collaborate, .dialog a)").on("click", function() {
+  $("header a:not(.skip, .dialog a)").on("click", function() {
     $(this).not(".dialog a").toggleClass("active");
-    $(this).next(":not(#collaborate)").not(".dialog a").toggleClass("hide");
+    $(this).next(":not(#collaborate, .skip)").not(".dialog a").toggleClass("hide");
 
-    if ( $(".tools.active").is(":visible") || $(".edit.active").is(":visible") || $(".add-source.active").is(":visible") || $(".download.active").is(":visible") || $(".open-demos.active").is(":visible")) {
-      $("header a:not(#collaborate, .grid-alignment)").not(".dialog a").not(this).removeClass("active").next().addClass("hide");
+    if ( $(".open-libraries.active").is(":visible") ) {
+      $("header a:not(#collaborate)").not(".dialog a, .skip").not(this).removeClass("active").next().addClass("hide");
     }
 
     $(".dialog.fl").css({
@@ -195,7 +317,7 @@ z      });
       //"left": $(this).offset().left - $(".dialog.fr").width() + $(this).width()
     //});
   });
-
+  
   // Grid Alignment
   $(function() {
     var BoxSplitter = function() {
@@ -360,4 +482,21 @@ z      });
       }
     });
   });
+  
+  // New project dialog
+  $("[data-action=newproj]").on("click", function() {
+    $("[data-action=newprojdialog]").fadeIn();
+  });
+  $("[data-action=confirm-newproj]").click(function() {
+    $("#applynewproject").html("").append( "<script>" + "$('[data-action=delfile]').trigger('click'); $('.check').attr('checked', false).trigger('change'); htmlEditor.setValue(''); cssEditor.setValue(''); jsEditor.setValue('');" + "<" + "/script>" );
+    $("[data-action=newprojdialog]").fadeOut();
+    alertify.success("New project created.");
+    return false;
+  });
+  $("[data-action=cancel-newproj]").click(function() {
+    alertify.error("New project aborted.");
+    $("[data-action=newprojdialog]").fadeOut();
+    return false;
+  });
+  $("[data-action=newprojdialog]").fadeOut();
 });
