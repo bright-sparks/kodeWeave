@@ -5,21 +5,26 @@
     <title>kodeWeave</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/dark.css" />
+    <link rel="stylesheet" href="css/kodeweave.css" />
+    <link rel="stylesheet" href="css/kodeweave-dark.css" />
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
     <script src="lib/jq/jquery.js"></script>
-    <script src="lib/jquery-ui/jquery-ui.min.js"></script>
-    <script src="lib/jquery-ui/jquery.ui.touch-punch.min.js"></script>
     <script src="lib/jszip/jszip.min.js"></script>
     <script src="lib/jszip/jszip-utils.js"></script>
     <script src="lib/jszip/FileSaver.js"></script>
     <script src="lib/alertify/alertify.min.js"></script>
+    <script type="text/javascript">
+      TogetherJSConfig_siteName="kodeWeave";
+      TogetherJSConfig_toolName="Teamwork";
+      TogetherJSConfig_suppressJoinConfirmation = false;
+      TogetherJSConfig_includeHashInUrl = true;
+      TogetherJSConfig_dontShowClicks = true;
+    </script>
   </head>
   <body>
     <!-- Opening and Closing for final index.html code -->
     <div class="hide">
       <div id="openHTML"></div>
-      <div id="siteTitle"></div>
       <div id="closeHTML"></div>
       <div id="closeFinal"></div>
     </div>
@@ -28,15 +33,10 @@
     <div class="vfileswrapper">
       <input type="text" class="vprojectname" placeholder="site title" value="site title">
       <textarea class="hide" data-action="fullactiveeditorcode"></textarea>
-      <textarea class="hide" data-action="fullundocode"></textarea>
-      <textarea class="hide" data-action="fullredocode"></textarea>
       <textarea class="hide" data-action="fullpreviewcode"></textarea>
+      <textarea class="hide" data-action="zipfileshrefcode"></textarea>
       <textarea class="hide" data-action="fulljszipcode"></textarea>
 <textarea class="calleditor hide">$(".editor-container > div").on("mouseup touchend", function() {
-</textarea>
-<textarea class="undocode hide">$("[data-action=undo]").click(function() {
-</textarea>
-<textarea class="redocode hide">$("[data-action=redo]").click(function() {
 </textarea>
 <textarea class="updatepreviewcode hide">function updatePreview() {
   var previewFrame = document.getElementById("preview");
@@ -44,10 +44,15 @@
   preview.open();
 </textarea>
 <textarea class="updatepreviewcode hide">
-  preview.write(openHTML.getValue() + siteTitle.getValue() + closeHTML.getValue() + yourRefs.getValue() + closeRefs.getValue() + htmlEditor.getValue() + closeFinal.getValue());
+  preview.write(openHTML.getValue() + $(".vprojectname").val() + closeHTML.getValue() + yourRefs.getValue() + closeRefs.getValue() + htmlEditor.getValue() + "\n" + closeFinal.getValue());
 </textarea>
 <textarea class="jszipcode hide">$("[data-action=export]").off().click(function() {
-  var zip = new JSZip();
+  JSZipUtils.getBinaryContent('font-awesome.zip', function(err, data) {
+    if(err) {
+      throw err; // or handle err
+    }
+
+    var zip = new JSZip(data);
 </textarea>
       <div class="vfiles">
         <div class="htmlEditor">
@@ -61,8 +66,8 @@
           <textarea class="redocode hide">if ( $(".activeEditor").val() === "htmlEditor" ) {
   htmlEditor.redo();
 }</textarea>
-          <textarea class="jszipcode hide">var htmlContent = openHTML.getValue() + siteTitle.getValue() + closeHTML.getValue() + yourRefs.getValue() + closeRefs.getValue() + htmlEditor.getValue() + closeFinal.getValue();
-  zip.file("index.html", htmlContent);
+          <textarea class="jszipcode hide">var htmlContent = openHTML.getValue() + $(".vprojectname").val() + closeHTML.getValue() + yourRefs.getValue() + closeRefs.getValue() + htmlEditor.getValue() + closeFinal.getValue();
+    zip.file("index.html", htmlContent);
 </textarea>
         </div>
         <div class="cssEditor">
@@ -70,34 +75,31 @@
           <textarea class="calleditor hide">else if ( $(this).attr("id") === "cssEditor" ) {
   $(".activeEditor").val("cssEditor");
 }</textarea>
-          <textarea class="undocode hide"> else if ( $(".activeEditor").val() === "cssEditor" ) {
-  cssEditor.undo();
-}</textarea>
-          <textarea class="redocode hide"> else if ( $(".activeEditor").val() === "cssEditor" ) {
-  cssEditor.redo();
-}</textarea>
           <textarea class="updatepreviewcode hide">
-  preview.write('<style' + '>' + cssEditor.getValue() + '<' + '/style' + '>');
+  preview.write('<st' + 'yle>' + cssEditor.getValue() + '</st' + 'yle>');
           </textarea>
-        </div>
-          <textarea class="jszipcode hide">var cssContent = cssEditor.getValue();
-  zip.file("css/style.css", cssContent);
+          <textarea class="zipfileshref hide">
+            <link rel="stylesheet" href="libraries/font-awesome/font-awesome.css" />
+            <link rel="stylesheet" href="libraries/font-awesome/macset.css" />
+            <link rel="stylesheet" href="css/style.css" />
+          </textarea>
+          <textarea class="jszipcode hide">
+    zip.file("css/style.css", cssEditor.getValue());
 </textarea>
+        </div>
         <div class="jsEditor">
           <a class="js-selected jsfile req-js">index.js</a>
           <textarea class="calleditor hide">else if ( $(this).attr("id") === "jsEditor" ) {
   $(".activeEditor").val("jsEditor");
 }</textarea>
-          <textarea class="undocode hide"> else if ( $(".activeEditor").val() === "jsEditor" ) {
-  jsEditor.undo();
-}</textarea><textarea class="redocode hide"> else if ( $(".activeEditor").val() === "jsEditor" ) {
-  jsEditor.redo();
-}</textarea>
           <textarea class="updatepreviewcode hide">
-  preview.write('<script' + '>' + jsEditor.getValue() + '<' + '/script' + '>');
+  preview.write('<sc' + 'ript>' + jsEditor.getValue() + '</scr' + 'ipt>');
           </textarea>
-          <textarea class="jszipcode hide">var jsContent = jsEditor.getValue();
-  zip.file("js/index.js", jsContent);
+          <textarea class="zipfileshref hide">
+            <script src="js/index.js"></script>
+          </textarea>
+          <textarea class="jszipcode hide">
+    zip.file("js/index.js", jsEditor.getValue());
 </textarea>
         </div>
       </div>
@@ -170,7 +172,7 @@
         <label class="menu-icon pointer" for="toggle" data-action="rotatemenu">&equiv;</label>
       </a>
       
-      <a class="skip" data-action="newproj">New</a>
+      <a class="skip hide" data-action="newproj">New</a>
       
       <a class="open-libraries">Libraries</a>
       <div class="libraries-dialog dialog fl hide">
@@ -193,61 +195,61 @@
                       <label for="alertify">Alertify JS (0.3.11)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;link rel="stylesheet" href="http://fabien-d.github.io/alertify.js/assets/js/lib/alertify/alertify.core.css" /&gt;
-&lt;link rel="stylesheet" href="http://fabien-d.github.io/alertify.js/assets/js/lib/alertify/alertify.default.css" /&gt;
-&lt;script src="http://fabien-d.github.io/alertify.js/assets/js/lib/alertify/alertify.min.js"&gt;&lt;/script&gt;</textarea>
-                    </div>
-                  </li>
-                  <li>
-                    <a>
-                      <input data-action="check"  class="check" type="checkbox" id="angularjs" />
-                      <label for="angularjs">Angular JS (1.4.3)</label>
-                    </a>
-                    <div class="hide">
-                      <textarea class="hide">&lt;script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;link rel="stylesheet" href="libraries/alertify/themes/alertify.core.css" /&gt;
+&lt;link rel="stylesheet" href="libraries/alertify/themes/alertify.default.css" /&gt;
+&lt;script src="libraries/alertify/alertify.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="alertifyjs alertifyjs1 hide"></textarea>
+                      <textarea class="alertifyjs alertifyjs2 hide"></textarea>
+                      <textarea class="alertifyjs alertifyjs3 hide"></textarea>
+                      <textarea class="alertifyzip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
                   <li class="ldd-heading">B</li>
                   <li>
                     <a>
-                      <input data-action="check"  class="check" type="checkbox" id="backbonejs" />
-                      <label for="backbonejs">Backbone JS (latest)</label>
-                    </a>
-                    <div class="hide">
-                      <textarea class="hide">&lt;script src="http://documentcloud.github.io/backbone/backbone-min.js"&gt;&lt;/script&gt;
-&lt;script src="http://documentcloud.github.io/underscore/underscore-min.js"&gt;&lt;/script&gt;</textarea>
-                    </div>
-                  </li>
-                  <li>
-                    <a>
                       <input data-action="check"  class="check" type="checkbox" id="bootstrap" />
-                      <label for="bootstrap">Bootstrap (latest)</label>
+                      <label for="bootstrap">Bootstrap (3.3.5)</label>
                     </a>
                     <span class="new">&nbsp; Popular !</span>
                     <div class="hide">
-                      <textarea class="hide">&lt;link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css" /&gt;
-&lt;script src="http://getbootstrap.com/dist/js/bootstrap.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;link rel="stylesheet" href="libraries/bootstrap/bootstrap.css" /&gt;
+&lt;script src="libraries/bootstrap/bootstrap.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="bootstrap bootstrap1 hide"></textarea>
+                      <textarea class="bootstrap bootstrap2 hide"></textarea>
+                      <textarea class="bootstrapzip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
                   <li class="ldd-heading">C</li>
                   <li>
                     <a>
-                      <input data-action="check"  class="check" type="checkbox" id="createjs" />
-                      <label for="createjs">Create JS (latest)</label>
-                    </a>
-                    <div class="hide">
-                      <textarea class="hide">&lt;script src="http://code.createjs.com/createjs-2013.09.25.min.js"&gt;&lt;/script&gt;</textarea>
-                    </div>
-                  </li>
-                  <li>
-                    <a>
                       <input data-action="check"  class="check" type="checkbox" id="chartjs" />
                       <label for="chartjs">Chart JS (0.2)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/chartjs/chart.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="chartjs hide"></textarea>
+                      <textarea class="chartjszip jszipcode hide"></textarea>
+                    </div>
+                  </li>
+                  <li>
+                    <a>
+                      <input data-action="check"  class="check" type="checkbox" id="createjs" />
+                      <label for="createjs">Create JS</label>
+                    </a>
+                    <div class="hide">
+                      <textarea class="libsources hide">lt;script src="libraries/createjs/createjs.min.js"&gt;&lt;/script&gt;
+    &lt;script src="libraries/createjs/easeljs.min.js"&gt;&lt;/script&gt;
+    &lt;script src="libraries/createjs/tweenjs.min.js"&gt;&lt;/script&gt;
+    &lt;script src="libraries/createjs/soundjs.min.js"&gt;&lt;/script&gt;
+    &lt;script src="libraries/createjs/preloadjs.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="createjs createjs1 hide"></textarea>
+                      <textarea class="createjs createjs2 hide"></textarea>
+                      <textarea class="createjs createjs3 hide"></textarea>
+                      <textarea class="createjs createjs4 hide"></textarea>
+                      <textarea class="createjs createjs5 hide"></textarea>
+                      <textarea class="createjszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -255,48 +257,23 @@
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="d3" />
-                      <label for="d3">D3 (3.0)</label>
+                      <label for="d3">D3</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://d3js.org/d3.v3.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/d3/d3.js"&gt;&lt;/script&gt;"&gt;</textarea>
+                      <textarea class="d3 hide"></textarea>
+                      <textarea class="d3zip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="dojo" />
-                      <label for="dojo">Dojo (latest)</label>
+                      <label for="dojo">Dojo</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/dojo/1/dojo/dojo.js"&gt;&lt;/script&gt;</textarea>
-                    </div>
-                  </li>
-                  <li>&nbsp;</li>
-                  <li class="ldd-heading no-border">E</li>
-                  <li>
-                    <a>
-                      <input data-action="check"  class="check" type="checkbox" id="ember" />
-                      <label for="ember">Ember (1.1.2)</label>
-                    </a>
-                    <div class="hide">
-                      <textarea class="hide">&lt;script src="http://builds.emberjs.com/tags/v1.1.2/ember.min.js"&gt;&lt;/script&gt;</textarea>
-                    </div>
-                  </li>
-                  <li>
-                    <a>
-                      <input data-action="check"  class="check" type="checkbox" id="enyo" />
-                      <label for="enyo">Enyo JS (latest)</label>
-                    </a>
-                    <div class="hide">
-                      <textarea class="hide">&lt;script src="http://nightly.enyojs.com/latest/enyo/enyo.js"&gt;&lt;/script&gt;</textarea>
-                    </div>
-                  </li>
-                  <li>
-                    <a>
-                      <input data-action="check"  class="check" type="checkbox" id="extjs" />
-                      <label for="extjs">Ext JS (4.2.0)</label>
-                    </a>
-                    <div class="hide">
-                      <textarea class="hide">&lt;script src="http://cdn.sencha.io/ext-4.2.0-gpl/ext-all.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/dojo/dojo.js"&gt;&lt;/script&gt;"&gt;</textarea>
+                      <textarea class="dojo hide"></textarea>
+                      <textarea class="dojozip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -307,50 +284,48 @@
                       <label for="fabricjs">Fabric JS (1.3.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.3.0/fabric.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/fabric/fabric.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="fabricjs hide"></textarea>
+                      <textarea class="fabricjszip jszipcode hide"></textarea>
                     </div>
                   </li>
-                  <li>
-                    <a>
-                      <input data-action="check"  class="check" type="checkbox" id="fontawesome" />
-                      <label for="fontawesome">FontAwesome (4.3.0)</label>
-                    </a>
-                    <span class="new">&nbsp; Popular !</span>
-                    <div class="hide">
-                      <textarea class="hide">&lt;link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" /&gt;</textarea>
-                    </div>
-                  </li>
-                </ul>
-                <ul>
                   <li class="ldd-heading">J</li>
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="jquery" />
-                      <label for="jquery">jQuery (latest)</label>
+                      <label for="jquery">jQuery (1.11.1)</label>
                     </a>
                     <span class="new">&nbsp; Popular !</span>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://code.jquery.com/jquery-latest.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/jquery/jquery.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="jquery hide"></textarea>
+                      <textarea class="jqueryzip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="jqueryui" />
-                      <label for="jqueryui">jQuery UI (latest)</label>
+                      <label for="jqueryui">jQuery UI (1.10.4)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css" /&gt;
-&lt;script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"&gt;&lt;/script&gt;
-&lt;script src="https://raw.githubusercontent.com/furf/jquery-ui-touch-punch/master/jquery.ui.touch-punch.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;link rel="stylesheet" href="libraries/jqueryui/jqueryui.css" /&gt;
+&lt;script src="libraries/jqueryui/jqueryui.min.js"&gt;&lt;/script&gt;
+&lt;script src="libraries/jqueryui/jquery.ui.touch-punch.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="jqueryui jqueryui1 hide"></textarea>
+                      <textarea class="jqueryui jqueryui2 hide"></textarea>
+                      <textarea class="jqueryui jqueryui3 hide"></textarea>
+                      <textarea class="jqueryuizip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="jquerytools" />
-                      <label for="jquerytools">jQuery Tools (1.2.7)</label>
+                      <label for="jquerytools">jQuery Tools (1.2.6)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/jquerytools/jquery.tools.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="jquerytools hide"></textarea>
+                      <textarea class="jquerytoolszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
@@ -360,11 +335,17 @@
                     </a>
                     <span class="new">&nbsp; Popular !</span>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://stuk.github.io/jszip/dist/jszip.min.js"&gt;&lt;/script&gt;
-&lt;script src="http://stuk.github.io/jszip-utils/dist/jszip-utils.js"&gt;&lt;/script&gt;
-&lt;script src="http://stuk.github.io/jszip/vendor/FileSaver.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/jszip/jszip.min.js"&gt;&lt;/script&gt;
+&lt;script src="libraries/jszip/jszip-utils.js"&gt;&lt;/script&gt;
+&lt;script src="libraries/jszip/FileSaver.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="jszip jszip1 hide"></textarea>
+                      <textarea class="jszip jszip2 hide"></textarea>
+                      <textarea class="jszip jszip3 hide"></textarea>
+                      <textarea class="jszipzip jszipcode hide"></textarea>
                     </div>
                   </li>
+                </ul>
+                <ul>
                   <li>&nbsp;</li>
                   <li class="ldd-heading no-border">K</li>
                   <li>
@@ -373,7 +354,9 @@
                       <label for="kinetic">Kinetic JS (4.7.3)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.7.3.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/kinetic/kinetic.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="kinetic hide"></textarea>
+                      <textarea class="kineticzip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
@@ -382,7 +365,9 @@
                       <label for="knockout">Knockout JS (3.0.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://knockoutjs.com/downloads/knockout-3.0.0.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/knockout/knockout.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="knockout hide"></textarea>
+                      <textarea class="knockoutzip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -390,20 +375,23 @@
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="modernizer" />
-                      <label for="modernizer">Modernizer (latest)</label>
+                      <label for="modernizer">Modernizer (2.8.3)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://modernizr.com/downloads/modernizr-latest.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/modernizer/modernizer.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="modernizer hide"></textarea>
+                      <textarea class="modernizerzip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="mootools" />
-                      <label for="mootools">MooTools (latest)</label>
+                      <label for="mootools">MooTools</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/mootools/1/mootools-yui-compressed.js"&gt;&lt;/script&gt;
-&lt;script src="http://modernizr.com/downloads/modernizr-latest.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/mootools/mootools-yui-compressed.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="mootools hide"></textarea>
+                      <textarea class="mootoolszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -415,7 +403,9 @@
                     </a>
                     <span class="new">&nbsp; Popular !</span>
                     <div class="hide">
-                      <textarea class="hide">&lt;link rel="stylesheet" href="http://necolas.github.io/normalize.css/3.0.1/normalize.css" /&gt;</textarea>
+                      <textarea class="libsources hide">&lt;link rel="stylesheet" href="libraries/normalize/normalize.css" /&gt;</textarea>
+                      <textarea class="normalize hide"></textarea>
+                      <textarea class="normalizezip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -426,7 +416,9 @@
                       <label for="paperjs">Paper JS (0.9.9)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.9/paper.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/paperjs/paperjs.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="paperjs hide"></textarea>
+                      <textarea class="paperjszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
@@ -435,16 +427,20 @@
                       <label for="processingjs">Processing JS (1.4.1)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://cloud.github.com/downloads/processing-js/processing-js/processing-1.4.1.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/processingjs/processingjs.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="processingjs hide"></textarea>
+                      <textarea class="processingjsszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="prototypejs" />
-                      <label for="prototypejs">Prototype JS (latest)</label>
+                      <label for="prototypejs">Prototype JS (1.7.1)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/prototype/1/prototype.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/prototypejs/prototypejs.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="prototypejs hide"></textarea>
+                      <textarea class="prototypejszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -455,7 +451,9 @@
                       <label for="qooxdoo">Qooxdoo (3.0.1)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://demo.qooxdoo.org/3.0.1/framework/q-3.0.1.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/qooxdoo/qooxdoo.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="qooxdoo hide"></textarea>
+                      <textarea class="qooxdooszip jszipcode hide"></textarea>
                     </div>
                   </li>
                 </ul>
@@ -463,11 +461,13 @@
                   <li class="ldd-heading">R</li>
                   <li>
                     <a>
-                      <input data-action="check"  class="check" type="checkbox" id="raphaeljs" />
-                      <label for="raphaeljs">Raphael JS (2.1.0)</label>
+                      <input data-action="check"  class="check" type="checkbox" id="raphael" />
+                      <label for="raphael">Raphael JS (2.1.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/raphael/raphael.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="raphael hide"></textarea>
+                      <textarea class="raphaelzip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
@@ -476,7 +476,9 @@
                       <label for="requirejs">Require JS (2.1.16)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://requirejs.org/docs/release/2.1.16/minified/require.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/require/require.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="requirejs hide"></textarea>
+                      <textarea class="requirejszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -484,28 +486,34 @@
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="scriptaculous" />
-                      <label for="scriptaculous">Script.aculo.us (latest)</label>
+                      <label for="scriptaculous">Script.aculo.us (1.9.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/scriptaculous/1/scriptaculous.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/scriptaculous/scriptaculous.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="scriptaculous hide"></textarea>
+                      <textarea class="scriptaculouszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="snapsvg" />
-                      <label for="snapsvg">Snap SVG (latest)</label>
+                      <label for="snapsvg">Snap SVG (0.4.1)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://snapsvg.io/assets/js/snap.svg-min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/snap-svg/snap-svg.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="snapsvg hide"></textarea>
+                      <textarea class="snapsvgzip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="svgjs" />
-                      <label for="svgjs">SVG JS (latest)</label>
+                      <label for="svgjs">SVG JS (2.0.5)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="https://raw.github.com/wout/svg.js/master/dist/svg.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/svg-js/svg-js.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="svgjs hide"></textarea>
+                      <textarea class="svgjszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -513,10 +521,12 @@
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="threejs" />
-                      <label for="threejs">Three JS (latest)</label>
+                      <label for="threejs">Three JS</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://threejs.org/build/three.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/threejs/three.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="threejs hide"></textarea>
+                      <textarea class="threejszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -524,10 +534,12 @@
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="underscorejs" />
-                      <label for="underscorejs">Underscore JS (latest)</label>
+                      <label for="underscorejs">Underscore JS (1.8.3)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://underscorejs.org/underscore-min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/underscore/underscore.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="underscorejs hide"></textarea>
+                      <textarea class="underscorejszip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -538,7 +550,9 @@
                       <label for="webfontloader">Web Font Loader (1.4.10)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/webfont/webfont.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="webfontloader hide"></textarea>
+                      <textarea class="webfontloaderzip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -549,7 +563,9 @@
                       <label for="yui">YUI (3.13.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://yui.yahooapis.com/3.13.0/build/yui/yui-min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/yui/yui.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="yui hide"></textarea>
+                      <textarea class="yuizip jszipcode hide"></textarea>
                     </div>
                   </li>
                   <li>&nbsp;</li>
@@ -557,10 +573,12 @@
                   <li>
                     <a>
                       <input data-action="check"  class="check" type="checkbox" id="zepto" />
-                      <label for="zepto">Zepto (latest)</label>
+                      <label for="zepto">Zepto (1.1.6)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="hide">&lt;script src="http://zeptojs.com/zepto.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">&lt;script src="libraries/zepto/zepto.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="zepto hide"></textarea>
+                      <textarea class="zeptozip jszipcode hide"></textarea>
                     </div>
                   </li>
                 </ul>
@@ -570,15 +588,9 @@
         </div>
       </div>
       
+      <a class="skip" data-action="teamwork">Teamwork</a>
       <a class="skip" data-action="export">Export .zip</a>
       <a class="skip" data-action="save">Save to Cloud</a>
-      
-      <a class="skip" data-action="undo">
-        <i class="fa fa-undo"></i>
-      </a>
-      <a class="skip" data-action="redo">
-        <i class="fa fa-repeat"></i>
-      </a>
     </header>
     
     <!-- New Project Dialog -->
@@ -607,15 +619,14 @@
 setTimeout(updatePreview, 300);
 </textarea>
     <textarea class="jszipcode hide">
-  var content = zip.generate({type:"blob"});
-  // see FileSaver.js
-  saveAs(content, $(".vprojectname").val().replace(/ /g,'-') + ".zip");
-  return false;
+    var content = zip.generate({type:"blob"});
+    // see FileSaver.js
+    saveAs(content, $(".vprojectname").val().replace(/ /g,'-') + ".zip");
+    return false;
+  });
 });
 </textarea>
     <div id="applyactiveeditorcode"></div>
-    <div id="applyundocode"></div>
-    <div id="applyredocode"></div>
     <div id="applynewproject"></div>
     <div id="applyfullpreview"></div>
     <div id="applyjszip"></div>
@@ -649,10 +660,8 @@ setTimeout(updatePreview, 300);
     <script src="codemirror/addon/lint/lint.js"></script>
     <script src="codemirror/addon/lint/javascript-lint.js"></script>
     <script src="codemirror/addon/lint/css-lint.js"></script>
-    <script src="lib/inlet.js"></script>
+    <script src="codemirror/inlet.min.js"></script>
 
-    <script src="lib/shortcut.js"></script>
-    <script src="main.js"></script>
-    <script src="editor.js"></script>
+    <script src="kodeweave.js"></script>
   </body>
 </html>
