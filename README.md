@@ -34,9 +34,7 @@ Of course kodeWeave will free and open source, so you can always fork the projec
 
 ### Todos
 
- - Add/Remove Library's
- - New files to work with live editor
- - Export all new files in a compressed zip file
+ - Have Add/Remove Library's work in Teamwork
  - Export your web app for native desktops using either [AppJS](http://appjs.com/) or [Electron](http://electron.atom.io/)
  - Incorporate Demos with editor
  - Export for the cloud

@@ -368,6 +368,24 @@ $(document).ready(function() {
       });
     });
     
+    $(".vprojectname").keyup(function(event) {
+      var appname = $('.vprojectname').val();
+      if (TogetherJS.running) {
+        TogetherJS.send({
+          type: "typing-appname",
+          output: appname
+        });
+        console.log(appname);
+      }
+    });
+    TogetherJS.hub.on("typing-appname", function (msg) {
+      if (! msg.sameUrl) {
+        return;
+      }
+      $('.vprojectname').val(msg.output);
+      console.log(msg.output);
+    });
+    
     $(".vfilename").keyup(function(event) {
       if ( event.which == 13 ) {
         $(".addvfile").click();
@@ -385,7 +403,7 @@ $(document).ready(function() {
       if (! msg.sameUrl) {
         return;
       }
-      $('.val').val(msg.output);
+      $('.vfilename').val(msg.output);
       console.log(msg.output);
     });
   });
