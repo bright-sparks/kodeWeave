@@ -54,8 +54,8 @@
 
     var zip = new JSZip(data);
 </textarea>
-      <div class="vfiles">
-        <div class="htmlEditor">
+      <ul class="vfiles">
+        <li class="htmlEditor">
           <a class="html-selected htmlfile req-html">index.html</a>
           <textarea class="calleditor hide">if ( $(this).attr("id") === "htmlEditor" ) {
   $(".activeEditor").val("htmlEditor");
@@ -69,8 +69,8 @@
           <textarea class="jszipcode hide">var htmlContent = openHTML.getValue() + $(".vprojectname").val() + closeHTML.getValue() + yourRefs.getValue() + closeRefs.getValue() + htmlEditor.getValue() + closeFinal.getValue();
     zip.file("index.html", htmlContent);
 </textarea>
-        </div>
-        <div class="cssEditor">
+        </li>
+        <li class="cssEditor">
           <a class="css-selected cssfile req-css">style.css</a>
           <textarea class="calleditor hide">else if ( $(this).attr("id") === "cssEditor" ) {
   $(".activeEditor").val("cssEditor");
@@ -79,15 +79,15 @@
   preview.write('<st' + 'yle>' + cssEditor.getValue() + '</st' + 'yle>');
           </textarea>
           <textarea class="zipfileshref hide">
-            <link rel="stylesheet" href="libraries/font-awesome/font-awesome.css" />
-            <link rel="stylesheet" href="libraries/font-awesome/macset.css" />
-            <link rel="stylesheet" href="css/style.css" />
-          </textarea>
+
+    <link rel="stylesheet" href="libraries/font-awesome/font-awesome.css" />
+    <link rel="stylesheet" href="libraries/font-awesome/macset.css" />
+    <link rel="stylesheet" href="css/style.css" /></textarea>
           <textarea class="jszipcode hide">
     zip.file("css/style.css", cssEditor.getValue());
 </textarea>
-        </div>
-        <div class="jsEditor">
+        </li>
+        <li class="jsEditor">
           <a class="js-selected jsfile req-js">index.js</a>
           <textarea class="calleditor hide">else if ( $(this).attr("id") === "jsEditor" ) {
   $(".activeEditor").val("jsEditor");
@@ -96,13 +96,12 @@
   preview.write('<sc' + 'ript>' + jsEditor.getValue() + '</scr' + 'ipt>');
           </textarea>
           <textarea class="zipfileshref hide">
-            <script src="js/index.js"></script>
-          </textarea>
+<script src="js/index.js"></script></textarea>
           <textarea class="jszipcode hide">
     zip.file("js/index.js", jsEditor.getValue());
 </textarea>
-        </div>
-      </div>
+        </li>
+      </ul>
       <textarea class="calleditor undocode redocode hide">
 });</textarea>
       <footer>
@@ -195,9 +194,9 @@
                       <label for="alertify">Alertify JS (0.3.11)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;link rel="stylesheet" href="libraries/alertify/themes/alertify.core.css" /&gt;
-&lt;link rel="stylesheet" href="libraries/alertify/themes/alertify.default.css" /&gt;
-&lt;script src="libraries/alertify/alertify.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;link rel="stylesheet" href="libraries/alertify/themes/alertify.core.css" /&gt;
+    &lt;link rel="stylesheet" href="libraries/alertify/themes/alertify.default.css" /&gt;
+    &lt;script src="libraries/alertify/alertify.min.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="alertifyjs alertifyjs1 hide"></textarea>
                       <textarea class="alertifyjs alertifyjs2 hide"></textarea>
                       <textarea class="alertifyjs alertifyjs3 hide"></textarea>
@@ -213,8 +212,8 @@
                     </a>
                     <span class="new">&nbsp; Popular !</span>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;link rel="stylesheet" href="libraries/bootstrap/bootstrap.css" /&gt;
-&lt;script src="libraries/bootstrap/bootstrap.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;link rel="stylesheet" href="libraries/bootstrap/bootstrap.css" /&gt;
+    &lt;script src="libraries/bootstrap/bootstrap.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="bootstrap bootstrap1 hide"></textarea>
                       <textarea class="bootstrap bootstrap2 hide"></textarea>
                       <textarea class="bootstrapzip jszipcode hide"></textarea>
@@ -228,7 +227,7 @@
                       <label for="chartjs">Chart JS (0.2)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/chartjs/chart.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/chartjs/chart.min.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="chartjs hide"></textarea>
                       <textarea class="chartjszip jszipcode hide"></textarea>
                     </div>
@@ -239,7 +238,7 @@
                       <label for="createjs">Create JS</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">lt;script src="libraries/createjs/createjs.min.js"&gt;&lt;/script&gt;
+                      <textarea class="libsources hide">    &lt;script src="libraries/createjs/createjs.min.js"&gt;&lt;/script&gt;
     &lt;script src="libraries/createjs/easeljs.min.js"&gt;&lt;/script&gt;
     &lt;script src="libraries/createjs/tweenjs.min.js"&gt;&lt;/script&gt;
     &lt;script src="libraries/createjs/soundjs.min.js"&gt;&lt;/script&gt;
@@ -260,7 +259,7 @@
                       <label for="d3">D3</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/d3/d3.js"&gt;&lt;/script&gt;"&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/d3/d3.js"&gt;&lt;/script&gt;"&gt;</textarea>
                       <textarea class="d3 hide"></textarea>
                       <textarea class="d3zip jszipcode hide"></textarea>
                     </div>
@@ -271,7 +270,7 @@
                       <label for="dojo">Dojo</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/dojo/dojo.js"&gt;&lt;/script&gt;"&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/dojo/dojo.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="dojo hide"></textarea>
                       <textarea class="dojozip jszipcode hide"></textarea>
                     </div>
@@ -284,7 +283,7 @@
                       <label for="fabricjs">Fabric JS (1.3.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/fabric/fabric.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/fabric/fabric.min.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="fabricjs hide"></textarea>
                       <textarea class="fabricjszip jszipcode hide"></textarea>
                     </div>
@@ -297,7 +296,7 @@
                     </a>
                     <span class="new">&nbsp; Popular !</span>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/jquery/jquery.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/jquery/jquery.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="jquery hide"></textarea>
                       <textarea class="jqueryzip jszipcode hide"></textarea>
                     </div>
@@ -308,9 +307,9 @@
                       <label for="jqueryui">jQuery UI (1.10.4)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;link rel="stylesheet" href="libraries/jqueryui/jqueryui.css" /&gt;
-&lt;script src="libraries/jqueryui/jqueryui.min.js"&gt;&lt;/script&gt;
-&lt;script src="libraries/jqueryui/jquery.ui.touch-punch.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;link rel="stylesheet" href="libraries/jqueryui/jqueryui.css" /&gt;
+    &lt;script src="libraries/jqueryui/jqueryui.min.js"&gt;&lt;/script&gt;
+    &lt;script src="libraries/jqueryui/jquery.ui.touch-punch.min.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="jqueryui jqueryui1 hide"></textarea>
                       <textarea class="jqueryui jqueryui2 hide"></textarea>
                       <textarea class="jqueryui jqueryui3 hide"></textarea>
@@ -323,7 +322,7 @@
                       <label for="jquerytools">jQuery Tools (1.2.6)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/jquerytools/jquery.tools.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/jquerytools/jquery.tools.min.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="jquerytools hide"></textarea>
                       <textarea class="jquerytoolszip jszipcode hide"></textarea>
                     </div>
@@ -335,9 +334,9 @@
                     </a>
                     <span class="new">&nbsp; Popular !</span>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/jszip/jszip.min.js"&gt;&lt;/script&gt;
-&lt;script src="libraries/jszip/jszip-utils.js"&gt;&lt;/script&gt;
-&lt;script src="libraries/jszip/FileSaver.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/jszip/jszip.min.js"&gt;&lt;/script&gt;
+    &lt;script src="libraries/jszip/jszip-utils.js"&gt;&lt;/script&gt;
+    &lt;script src="libraries/jszip/FileSaver.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="jszip jszip1 hide"></textarea>
                       <textarea class="jszip jszip2 hide"></textarea>
                       <textarea class="jszip jszip3 hide"></textarea>
@@ -354,7 +353,7 @@
                       <label for="kinetic">Kinetic JS (4.7.3)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/kinetic/kinetic.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/kinetic/kinetic.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="kinetic hide"></textarea>
                       <textarea class="kineticzip jszipcode hide"></textarea>
                     </div>
@@ -365,7 +364,7 @@
                       <label for="knockout">Knockout JS (3.0.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/knockout/knockout.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/knockout/knockout.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="knockout hide"></textarea>
                       <textarea class="knockoutzip jszipcode hide"></textarea>
                     </div>
@@ -378,7 +377,7 @@
                       <label for="modernizer">Modernizer (2.8.3)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/modernizer/modernizer.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/modernizer/modernizer.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="modernizer hide"></textarea>
                       <textarea class="modernizerzip jszipcode hide"></textarea>
                     </div>
@@ -389,7 +388,7 @@
                       <label for="mootools">MooTools</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/mootools/mootools-yui-compressed.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/mootools/mootools-yui-compressed.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="mootools hide"></textarea>
                       <textarea class="mootoolszip jszipcode hide"></textarea>
                     </div>
@@ -403,7 +402,7 @@
                     </a>
                     <span class="new">&nbsp; Popular !</span>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;link rel="stylesheet" href="libraries/normalize/normalize.css" /&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;link rel="stylesheet" href="libraries/normalize/normalize.css" /&gt;</textarea>
                       <textarea class="normalize hide"></textarea>
                       <textarea class="normalizezip jszipcode hide"></textarea>
                     </div>
@@ -416,7 +415,7 @@
                       <label for="paperjs">Paper JS (0.9.9)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/paperjs/paperjs.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/paperjs/paperjs.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="paperjs hide"></textarea>
                       <textarea class="paperjszip jszipcode hide"></textarea>
                     </div>
@@ -427,7 +426,7 @@
                       <label for="processingjs">Processing JS (1.4.1)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/processingjs/processingjs.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/processingjs/processingjs.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="processingjs hide"></textarea>
                       <textarea class="processingjsszip jszipcode hide"></textarea>
                     </div>
@@ -438,7 +437,7 @@
                       <label for="prototypejs">Prototype JS (1.7.1)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/prototypejs/prototypejs.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/prototypejs/prototypejs.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="prototypejs hide"></textarea>
                       <textarea class="prototypejszip jszipcode hide"></textarea>
                     </div>
@@ -451,7 +450,7 @@
                       <label for="qooxdoo">Qooxdoo (3.0.1)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/qooxdoo/qooxdoo.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/qooxdoo/qooxdoo.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="qooxdoo hide"></textarea>
                       <textarea class="qooxdooszip jszipcode hide"></textarea>
                     </div>
@@ -465,7 +464,7 @@
                       <label for="raphael">Raphael JS (2.1.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/raphael/raphael.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/raphael/raphael.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="raphael hide"></textarea>
                       <textarea class="raphaelzip jszipcode hide"></textarea>
                     </div>
@@ -476,7 +475,7 @@
                       <label for="requirejs">Require JS (2.1.16)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/require/require.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/require/require.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="requirejs hide"></textarea>
                       <textarea class="requirejszip jszipcode hide"></textarea>
                     </div>
@@ -489,7 +488,7 @@
                       <label for="scriptaculous">Script.aculo.us (1.9.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/scriptaculous/scriptaculous.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/scriptaculous/scriptaculous.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="scriptaculous hide"></textarea>
                       <textarea class="scriptaculouszip jszipcode hide"></textarea>
                     </div>
@@ -500,7 +499,7 @@
                       <label for="snapsvg">Snap SVG (0.4.1)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/snap-svg/snap-svg.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/snap-svg/snap-svg.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="snapsvg hide"></textarea>
                       <textarea class="snapsvgzip jszipcode hide"></textarea>
                     </div>
@@ -511,7 +510,7 @@
                       <label for="svgjs">SVG JS (2.0.5)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/svg-js/svg-js.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/svg-js/svg-js.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="svgjs hide"></textarea>
                       <textarea class="svgjszip jszipcode hide"></textarea>
                     </div>
@@ -524,7 +523,7 @@
                       <label for="threejs">Three JS</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/threejs/three.min.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/threejs/three.min.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="threejs hide"></textarea>
                       <textarea class="threejszip jszipcode hide"></textarea>
                     </div>
@@ -537,7 +536,7 @@
                       <label for="underscorejs">Underscore JS (1.8.3)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/underscore/underscore.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/underscore/underscore.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="underscorejs hide"></textarea>
                       <textarea class="underscorejszip jszipcode hide"></textarea>
                     </div>
@@ -550,7 +549,7 @@
                       <label for="webfontloader">Web Font Loader (1.4.10)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/webfont/webfont.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/webfont/webfont.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="webfontloader hide"></textarea>
                       <textarea class="webfontloaderzip jszipcode hide"></textarea>
                     </div>
@@ -563,7 +562,7 @@
                       <label for="yui">YUI (3.13.0)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/yui/yui.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/yui/yui.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="yui hide"></textarea>
                       <textarea class="yuizip jszipcode hide"></textarea>
                     </div>
@@ -576,7 +575,7 @@
                       <label for="zepto">Zepto (1.1.6)</label>
                     </a>
                     <div class="hide">
-                      <textarea class="libsources hide">&lt;script src="libraries/zepto/zepto.js"&gt;&lt;/script&gt;</textarea>
+                      <textarea class="libsources hide">    &lt;script src="libraries/zepto/zepto.js"&gt;&lt;/script&gt;</textarea>
                       <textarea class="zepto hide"></textarea>
                       <textarea class="zeptozip jszipcode hide"></textarea>
                     </div>

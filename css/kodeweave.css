@@ -64,10 +64,10 @@ a:active, a:focus {
 .vfiles a {
   font: 13px Lato;
 }
-.vfiles div {
+.vfiles li {
   padding: 3px 0;
 }
-.vfiles div a {
+.vfiles li a {
   padding: 3px;
 }
 .vfileswrapper footer {

@@ -267,13 +267,13 @@ $(document).ready(function() {
       $("[data-action=zipfileshrefcode]").val(function() {
         return $.map($(".zipfileshref"), function (el) {
           return el.value;
-        }).join("");
+        }).join("\n    ");
       });
       // Update JSZip (Applied dynamically from HTML div )
       $("[data-action=fulljszipcode]").val(function() {
         return $.map($(".jszipcode"), function (el) {
           return el.value;
-        }).join("");
+        }).join("\n");
       });
 
       // Apply Update Code
@@ -283,7 +283,7 @@ $(document).ready(function() {
       $("#applyactiveeditorcode").html("").append( "<script>" + $("[data-action=fullactiveeditorcode]").val() + "<" + "/script>" );
 
       // Add Link/Source HREF's
-      closeFinal.setValue($("[data-action=zipfileshrefcode]").val() + "\n  </body>\n</html>");
+      closeFinal.setValue("\n" + $("[data-action=zipfileshrefcode]").val() + "\n  </body>\n</html>");
 
       // Apply Export Function
       $("#applyjszip script").remove();
@@ -313,7 +313,7 @@ $(document).ready(function() {
       var cssUndo = "<textarea class='undocode hide'> else if ( $('.activeEditor').val() === 'cssfile"+ count +"' ) { cssEditor"+ count + ".undo(); $('.edit.active').trigger('click'); }</textarea>";
       var cssRedo = "<textarea class='redocode hide'> else if ( $('.activeEditor').val() === 'cssfile"+ count +"' ) { cssEditor"+ count + ".redo(); $('.edit.active').trigger('click'); }</textarea>";
       var cssUpdate = "<textarea class='updatepreviewcode hide'>\npreview.write('<st' + 'yle' + '>' + cssEditor"+ count +".getValue() + '</st' + 'yle>');\n</textarea>";
-      var cssJSZipHREF = "<textarea class='zipfileshref hide'><link rel='stylesheet' href='css/"+ $val.toLowerCase() +"' /></textarea>";
+      var cssJSZipHREF = "<textarea class='zipfileshref hide'><link rel=\"stylesheet\" href=\"css/"+ $val.toLowerCase() +"\" /></textarea>";
       var cssJSZip = "<textarea class='jszipcode hide'>zip.file('css/"+ $val.toLowerCase() +"', cssEditor"+ count +".getValue()); </textarea>";
       var jsCodemirror = 'var jsEditor'+ count +' = CodeMirror(document.getElementById("jsfile'+ count +'"), {  mode: "text/javascript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "// comment"}); var inlet = Inlet(jsEditor'+ count +'); jsEditor'+ count +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); jsEditor'+ count +'.on("drop", function() { jsEditor'+ count +'.setValue(""); }); ';
       
@@ -326,15 +326,15 @@ $(document).ready(function() {
       var jsJSZip = "<textarea class='jszipcode hide'>zip.file('js/"+ $val.toLowerCase() +"', jsEditor"+ count +".getValue()); </textarea>";
       
       if ($val.toLowerCase().substring($val.length - 5) === ".html") {
-        // $(".html-editor").append( '<div id="htmlfile'+ count + '" class="htmlfile' + count + '"></div>' );
-        // $(".vfiles").append( '<div class="htmlfile' + count + '">'+ htmlfile +'<script>' + htmlCodemirror + '<' + '/script></div>' );
+        // $(".html-editor").append( '<li id="htmlfile'+ count + '" class="htmlfile' + count + '"></li>' );
+        // $(".vfiles").append( '<li class="htmlfile' + count + '">'+ htmlfile +'<script>' + htmlCodemirror + '<' + '/script></li>' );
         // alertify("NOTE: The live preview only applies to index.html");
       } else if ($val.toLowerCase().substring($val.length - 4) === ".css") {
-        $(".css-editor").append( '<div id="cssfile'+ count + '" class="cssfile' + count + '"></div>' );
-        $(".vfiles").append( '<div class="cssfile' + count + '">'+ cssfile +'<script>var activeEditor = $(".activeEditor"); ' + cssCodemirror + cssActiveEditor + '<' + '/script>'+ cssUndo + cssRedo + cssUpdate + cssJSZipHREF + cssJSZip + '</div>' );
+        $(".css-editor").append( '<li id="cssfile'+ count + '" class="cssfile' + count + '"></li>' );
+        $(".vfiles").append( '<li class="cssfile' + count + '">'+ cssfile +'<script>var activeEditor = $(".activeEditor"); ' + cssCodemirror + cssActiveEditor + '<' + '/script>'+ cssUndo + cssRedo + cssUpdate + cssJSZipHREF + cssJSZip + '</li>' );
       } else if ($val.toLowerCase().substring($val.length - 3) === ".js") {
-        $(".js-editor").append( '<div id="jsfile'+ count + '" class="jsfile' + count + '"></div>' );
-        $(".vfiles").append( '<div class="jsfile' + count + '">'+ jsfile + '<script>var activeEditor = $(".activeEditor"); ' + jsCodemirror + jsActiveEditor + '<' + '/script>'+ jsUndo + jsRedo + jsUpdate + jsJSZipHREF + jsJSZip + '</div>' );
+        $(".js-editor").append( '<li id="jsfile'+ count + '" class="jsfile' + count + '"></li>' );
+        $(".vfiles").append( '<li class="jsfile' + count + '">'+ jsfile + '<script>var activeEditor = $(".activeEditor"); ' + jsCodemirror + jsActiveEditor + '<' + '/script>'+ jsUndo + jsRedo + jsUpdate + jsJSZipHREF + jsJSZip + '</li>' );
       } else {
         alertify.error("Houston we have a problem!");
       }
@@ -367,10 +367,26 @@ $(document).ready(function() {
         $(this).parent().remove();
       });
     });
-    $(".vfilename").keyup(function(e) {
-      if ( e.keyCode == 13 ) {
-        $(".addvfile").trigger("click");
+    
+    $(".vfilename").keyup(function(event) {
+      if ( event.which == 13 ) {
+        $(".addvfile").click();
       }
+      var filename = $('.vfilename').val();
+      if (TogetherJS.running) {
+        TogetherJS.send({
+          type: "typing-filename",
+          output: filename
+        });
+        console.log(filename);
+      }
+    });
+    TogetherJS.hub.on("typing-filename", function (msg) {
+      if (! msg.sameUrl) {
+        return;
+      }
+      $('.val').val(msg.output);
+      console.log(msg.output);
     });
   });
   
