@@ -250,6 +250,40 @@ $(document).ready(function() {
         }
         return false;
       });
+
+      // Delete Virtual File
+      $("[data-action=delfile]").click(function(event) {
+        $("#" + $(this).parent().attr("class") ).remove();
+        if ( $(this).prev().hasClass("htmlfile") ) {
+          if ( $(this).prev().hasClass("html-selected") ) {
+            if ( !$(".req-html").hasClass("html-selected") ) {
+              $(".req-html").trigger("click");
+            }
+          }
+        } else if ( $(this).prev().hasClass("cssfile") ) {
+          if ( $(this).prev().hasClass("css-selected") ) {
+            if ( !$(".req-css").hasClass("css-selected") ) {
+              $(".req-css").trigger("click");
+            }
+          }
+        } else if ( $(this).prev().hasClass("jsfile") ) {
+          if ( $(this).prev().hasClass("js-selected") ) {
+            if ( !$(".req-js").hasClass("js-selected") ) {
+              $(".req-js").trigger("click");
+            }
+          }
+        }
+        $(this).parent().remove();
+        
+        var delfile = $(".vfiles").html();
+        if (TogetherJS.running) {
+          TogetherJS.send({
+            type: "del-file",
+            output: delfile
+          });
+        }
+      });
+
       // Detect Active Editor
       $("[data-action=fullactiveeditorcode]").val(function() {
         return $.map($(".calleditor"), function (el) {
@@ -294,7 +328,7 @@ $(document).ready(function() {
     SelectFile();
     
     // Adds a new custom file
-    $(".addvfile").click(function() {
+    $(".addvfile").click(function(event) {
       $("[data-action=count]").html(counter++);
       
       var count = $("[data-action=count]").html();
@@ -330,81 +364,78 @@ $(document).ready(function() {
         // $(".vfiles").append( '<li class="htmlfile' + count + '">'+ htmlfile +'<script>' + htmlCodemirror + '<' + '/script></li>' );
         // alertify("NOTE: The live preview only applies to index.html");
       } else if ($val.toLowerCase().substring($val.length - 4) === ".css") {
-        $(".css-editor").append( '<li id="cssfile'+ count + '" class="cssfile' + count + '"></li>' );
+        $(".css-editor").append( '<div id="cssfile'+ count + '" class="cssfile' + count + '"></div>' );
         $(".vfiles").append( '<li class="cssfile' + count + '">'+ cssfile +'<script>var activeEditor = $(".activeEditor"); ' + cssCodemirror + cssActiveEditor + '<' + '/script>'+ cssUndo + cssRedo + cssUpdate + cssJSZipHREF + cssJSZip + '</li>' );
       } else if ($val.toLowerCase().substring($val.length - 3) === ".js") {
-        $(".js-editor").append( '<li id="jsfile'+ count + '" class="jsfile' + count + '"></li>' );
+        $(".js-editor").append( '<div id="jsfile'+ count + '" class="jsfile' + count + '"></div>' );
         $(".vfiles").append( '<li class="jsfile' + count + '">'+ jsfile + '<script>var activeEditor = $(".activeEditor"); ' + jsCodemirror + jsActiveEditor + '<' + '/script>'+ jsUndo + jsRedo + jsUpdate + jsJSZipHREF + jsJSZip + '</li>' );
       } else {
         alertify.error("Houston we have a problem!");
       }
       
       SelectFile();
-      $(".vfilename").val("");
 
-      // Delete Virtual File
-      $("[data-action=delfile]").on("click", function() {
-        $("#" + $(this).parent().attr("class") ).remove();
-        if ( $(this).prev().hasClass("htmlfile") ) {
-          if ( $(this).prev().hasClass("html-selected") ) {
-            if ( !$(".req-html").hasClass("html-selected") ) {
-              $(".req-html").trigger("click");
-            }
-          }
-        } else if ( $(this).prev().hasClass("cssfile") ) {
-          if ( $(this).prev().hasClass("css-selected") ) {
-            if ( !$(".req-css").hasClass("css-selected") ) {
-              $(".req-css").trigger("click");
-            }
-          }
-        } else if ( $(this).prev().hasClass("jsfile") ) {
-          if ( $(this).prev().hasClass("js-selected") ) {
-            if ( !$(".req-js").hasClass("js-selected") ) {
-              $(".req-js").trigger("click");
-            }
-          }
-        }
-        $(this).parent().remove();
-      });
-    });
-    
-    $(".vprojectname").keyup(function(event) {
-      var appname = $('.vprojectname').val();
+      var newfile = $(".vfiles").html();
       if (TogetherJS.running) {
         TogetherJS.send({
-          type: "typing-appname",
-          output: appname
+          type: "new-file",
+          output: newfile
         });
-        console.log(appname);
       }
-    });
-    TogetherJS.hub.on("typing-appname", function (msg) {
-      if (! msg.sameUrl) {
-        return;
+      
+      if ($val.toLowerCase().substring($val.length - 4) === ".css") {
+        var csseditor = $(".css-editor").html();
+        if (TogetherJS.running) {
+          TogetherJS.send({
+            type: "new-css",
+            output: csseditor
+          });
+        }
+      } else if ($val.toLowerCase().substring($val.length - 3) === ".js") {
+        var jseditor = $(".js-editor").html();
+        if (TogetherJS.running) {
+          TogetherJS.send({
+            type: "new-js",
+            output: jseditor
+          });
+        }
       }
-      $('.vprojectname').val(msg.output);
-      console.log(msg.output);
+
+      $(".vfilename").val("");
     });
     
     $(".vfilename").keyup(function(event) {
       if ( event.which == 13 ) {
         $(".addvfile").click();
       }
-      var filename = $('.vfilename').val();
-      if (TogetherJS.running) {
-        TogetherJS.send({
-          type: "typing-filename",
-          output: filename
-        });
-        console.log(filename);
-      }
     });
-    TogetherJS.hub.on("typing-filename", function (msg) {
+    TogetherJS.hub.on("new-file", function (msg) {
       if (! msg.sameUrl) {
         return;
       }
-      $('.vfilename').val(msg.output);
-      console.log(msg.output);
+      $(".vfiles").html(msg.output);
+      SelectFile();
+    });
+    TogetherJS.hub.on("new-css", function (msg) {
+      if (! msg.sameUrl) {
+        return;
+      }
+      $(".css-editor").html(msg.output);
+      SelectFile();
+    });
+    TogetherJS.hub.on("new-js", function (msg) {
+      if (! msg.sameUrl) {
+        return;
+      }
+      $(".js-editor").html(msg.output);
+      SelectFile();
+    });
+    TogetherJS.hub.on("del-file", function (msg) {
+      if (! msg.sameUrl) {
+        return;
+      }
+      $(".vfiles").html(msg.output);
+      SelectFile();
     });
   });
   
