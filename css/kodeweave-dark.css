@@ -52,9 +52,23 @@
   background: rgb(40, 44, 52);
   border: 1px solid #525252;
 }
-.head a, .dialog a {
+.head a, .head input, .dialog a {
   color: #72B0BB;
 }
+
+.head input::-webkit-input-placeholder {
+   color: #49767D;
+}
+.head input:-moz-placeholder { /* Firefox 18- */
+   color: #49767D;  
+}
+.head input::-moz-placeholder {  /* Firefox 19+ */
+   color: #49767D;  
+}
+.head input:-ms-input-placeholder {  
+   color: #49767D;  
+}
+
 .head a:hover, .dialog a:hover {
   color: #fff;
 }
@@ -79,6 +93,9 @@
 .jsfile {
   color: #BF8454;
 }
+.otherfile {
+  color: #B269B5;
+}
 .htmlfile:hover {
   color: #68E8FF;
 }
@@ -88,6 +105,9 @@
 .jsfile:hover {
   color: #FFA65D;
 }
+.otherfile:hover {
+  color: #EC7AF1;
+}
 .html-selected {
   border-bottom: 1px solid #72B0BB;
 }
@@ -96,6 +116,9 @@
 }
 .js-selected {
   border-bottom: 1px solid #BF8454;
+}
+.other-selected {
+  border-bottom: 1px solid #B269B5;
 }
 
 .ldd-menu ul li a:hover{
@@ -112,7 +135,7 @@
   border: 0;
 }
 
-.html-editor, .css-editor, .js-editor {
+.html-editor, .css-editor, .js-editor, .other-editor {
   background-color: rgb(40, 44, 52);
 }
 
@@ -146,6 +169,7 @@
 
 /* e.g. #id */
 .cm-atom       { color: rgb(157, 165, 172)!important; }
+.cm-builtin       { color: #a00!important; }
 
 /* e.g. 20 */
 .cm-number     { color: #d0782a!important; }
