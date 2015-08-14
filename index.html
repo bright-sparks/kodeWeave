@@ -13,7 +13,7 @@
     <script src="lib/jszip/jszip-utils.js"></script>
     <script src="lib/jszip/FileSaver.js"></script>
     <script src="lib/alertify/alertify.min.js"></script>
-    <script type="text/javascript">
+    <script>
       TogetherJSConfig_siteName="kodeWeave";
       TogetherJSConfig_toolName="Teamwork";
       TogetherJSConfig_suppressJoinConfirmation = false;
@@ -101,11 +101,20 @@
     zip.file("js/index.js", jsEditor.getValue());
 </textarea>
         </li>
+        <li class="otherEditor">
+          <a class="other-selected otherfile req-other">README.md</a>
+          <textarea class="calleditor hide">if ( $(this).attr("id") === "otherEditor" ) {
+  $(".activeEditor").val("otherEditor");
+}</textarea>
+          <textarea class="jszipcode hide">
+    zip.file("README.md", otherEditor.getValue());
+</textarea>
+        </li>
       </ul>
       <textarea class="calleditor undocode redocode hide">
 });</textarea>
       <footer>
-        <input type="text" class="vfilename fl" placeholder="n.css/n.js only">
+        <input type="text" class="vfilename fl" placeholder="filehere.type">
 
         <a class="addvfile fr">
           +
@@ -115,45 +124,54 @@
     
     <!-- Editor/Preview -->
     <div id="splitWrapper">
-      <div id="splitContainer">
+      <div id="mainSplitter">
         <div>
-          <div id="leftSplitter">
+          <div id="splitContainer">
             <div>
-              <div class="editor-container html-editor">
-                <div id="htmlEditor"></div>
+              <div id="leftSplitter">
+                <div>
+                  <div class="editor-container html-editor">
+                    <div id="htmlEditor"></div>
+                  </div>
+                  <a class="fullscreen-html-toggle unfill">
+                    <span class="fa fa-expand" id="fullscreen-html"></span>
+                  </a>
+                </div>
+                <div>
+                  <div class="editor-container css-editor">
+                    <div id="cssEditor"></div>
+                  </div>
+                  <a class="fullscreen-css-toggle unfill">
+                    <span class="fa fa-expand" id="fullscreen-css"></span>
+                  </a>
+                </div>
               </div>
-              <a class="fullscreen-html-toggle unfill">
-                <span class="fa fa-expand" id="fullscreen-html"></span>
-              </a>
             </div>
             <div>
-              <div class="editor-container css-editor">
-                <div id="cssEditor"></div>
+              <div id="rightSplitter">
+                <div>
+                  <div class="editor-container js-editor">
+                    <div id="jsEditor"></div>
+                  </div>
+                  <a class="fullscreen-js-toggle unfill">
+                    <span class="fa fa-expand" id="fullscreen-js"></span>
+                  </a>
+                </div>
+                <div>
+                  <div class="editor-container preview-editor">
+                    <iframe id="preview"></iframe>
+                  </div>
+                  <a class="preview-mode-toggle unfill">
+                    <span class="fa fa-expand" id="preview-mode"></span>
+                  </a>
+                </div>
               </div>
-              <a class="fullscreen-css-toggle unfill">
-                <span class="fa fa-expand" id="fullscreen-css"></span>
-              </a>
             </div>
           </div>
         </div>
         <div>
-          <div id="rightSplitter">
-            <div>
-              <div class="editor-container js-editor">
-                <div id="jsEditor"></div>
-              </div>
-              <a class="fullscreen-js-toggle unfill">
-                <span class="fa fa-expand" id="fullscreen-js"></span>
-              </a>
-            </div>
-            <div>
-              <div class="editor-container preview-editor">
-                <iframe id="preview"></iframe>
-              </div>
-              <a class="preview-mode-toggle unfill">
-                <span class="fa fa-expand" id="preview-mode"></span>
-              </a>
-            </div>
+          <div class="editor-container other-editor">
+            <div id="otherEditor"></div>
           </div>
         </div>
       </div>
@@ -183,8 +201,7 @@
         <div class="addlibrary-tablets">
           <ul class="ldd-menu">
             <li>
-              <span style="width: 75px;" class="menu-item" title="Select a CSS or JavaScript library">&nbsp;</span>
-              <div class="ldd-submenu field-shadow" style="margin-top: 7px; display: block;">
+              <div class="ldd-submenu">
                 <ul style="border-left:none;">
                   <li class="ldd-heading">A</li>
                   <li>
@@ -586,10 +603,52 @@
         </div>
       </div>
       
+      <a class="open-demos">Demos</a>
+      <div class="demos-dialog dialog fl hide">
+        <div class="adddemos-tablets">
+          <ul class="ldd-menu">
+            <li>
+              <div class="ldd-submenu">
+                <ul style="border-left:none;">
+                  <li class="ldd-heading">A</li>
+                  <li><a data-action="alphabetizer">alphabetizer</a></li>
+                  <li><a data-action="applicator">applicator</a></li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">C</li>
+                  <li><a data-action="codeeditor">code editor</a></li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">D</li>
+                  <li><a data-action="dateclock">date and time</a></li>
+                  <li><a data-action="detectorientation">detect orientation</a></li>
+                  <li><a data-action="osdisplay">display operating system</a></li>
+                  <li>&nbsp;</li>
+                </ul>
+                <ul>
+                  <li class="ldd-heading">P</li>
+                  <li><a data-action="passwordgen">password generator</a></li>
+                  <li><a data-action="picgallery">picture gallery</a></li>
+                  <li><a data-action="picviewer">picture viewer</a></li>
+                  <li><a data-action="polyui">poly ui kit</a></li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">S</li>
+                  <li><a data-action="simpleslideshow">simple slideshow</a></li>
+                  <li><a data-action="splitter">splitter</a></li>
+                  <li>&nbsp;</li>
+                  <li class="ldd-heading">W</li>
+                  <li><a data-action="whiteboard">whiteboard</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
       <a class="skip" data-action="teamwork">Teamwork</a>
       <a class="skip" data-action="export">Export .zip</a>
+      <a class="skip hide" data-action="save">Save to Cloud</a>
+      <input data-action="outputkeycode" type="text" placeholder="Type for keycode" />
     </header>
-    
+      
     <!-- New Project Dialog -->
     <div class="dialog-bg column hide" data-action="newprojdialog">
       <div>
@@ -661,6 +720,6 @@ setTimeout(updatePreview, 300);
     <script src="codemirror/addon/lint/css-lint.js"></script>
     <script src="codemirror/inlet.min.js"></script>
 
-    <script src="kodeweave-test.js"></script>
+    <script src="kodeweave.js"></script>
   </body>
 </html>
