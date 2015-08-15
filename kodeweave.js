@@ -1,6 +1,19 @@
 // Handles CodeMirror Preview Delay
 var delay;
 
+// Rules Specified for HTML Validation
+var ruleSets = {
+  "tagname-lowercase": true,
+  "attr-lowercase": true,
+  "attr-value-double-quotes": true,
+  "doctype-first": false,
+  "tag-pair": true,
+  "spec-char-escape": true,
+  "id-unique": true,
+  "src-not-empty": true,
+  "attr-no-duplication": true
+};
+
 // Initialize HTML editor
 var htmlEditor = CodeMirror(document.querySelector("#htmlEditor"), {
   mode: "text/html",
@@ -11,7 +24,8 @@ var htmlEditor = CodeMirror(document.querySelector("#htmlEditor"), {
   autoCloseTags: true,
   foldGutter: true,
   dragDrop: true,
-  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+  lint: true,
+  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],
   value: "<!-- comment -->\nhello world!"
 });
 var inlet = Inlet(htmlEditor);
@@ -727,12 +741,12 @@ $(document).ready(function() {
       var findJS = myjs.substr(myjs.length - 3); // => ".js"
       var mycss = ".css";
       var findCSS = mycss.substr(mycss.length - 4); // => ".css"
-      // var htmlfile = '<a class="htmlfile" data-action="htmlfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+      var htmlfile = '<a class="htmlfile" data-action="htmlfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
       var cssfile = '<a class="cssfile" data-action="cssfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
       var jsfile = '<a class="jsfile" data-action="jsfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
       var otherfile = '<a class="otherfile" data-action="otherfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
       
-      // var htmlCodemirror = 'var htmlEditor'+ count +' = CodeMirror(document.getElementById("htmlfile'+ count +'"), {  mode: "text/html",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],  value: "<!-- comment -->"});';
+      var htmlCodemirror = 'var htmlEditor'+ count +' = CodeMirror(document.getElementById("htmlfile'+ count +'"), {  mode: "text/html",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "<!-- comment -->"});';
       var cssCodemirror = 'var cssEditor'+ count +' = CodeMirror(document.getElementById("cssfile'+ count +'"), {  mode: "text/css",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "/* comment */"}); var inlet = Inlet(cssEditor'+ count +'); cssEditor'+ count +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); cssEditor'+ count +'.on("drop", function() { cssEditor'+ count +'.setValue(""); });';
       var cssActiveEditor = '$("#cssfile'+ count +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "cssfile'+ count +'" ) { $(".activeEditor").val("cssfile'+ count +'"); } });';
       var cssUndo = "<textarea class='undocode hide'> else if ( $('.activeEditor').val() === 'cssfile"+ count +"' ) { cssEditor"+ count + ".undo(); $('.edit.active').trigger('click'); }</textarea>";
@@ -743,7 +757,6 @@ $(document).ready(function() {
 
       var jsCodemirror = 'var jsEditor'+ count +' = CodeMirror(document.getElementById("jsfile'+ count +'"), {  mode: "text/javascript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "// comment"}); var inlet = Inlet(jsEditor'+ count +'); jsEditor'+ count +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); jsEditor'+ count +'.on("drop", function() { jsEditor'+ count +'.setValue(""); }); ';
       var jsActiveEditor = '$("#jsfile'+ count +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "jsfile'+ count +'" ) { $(".activeEditor").val("jsfile'+ count +'"); } });';
-      // var jsActiveEditor = "<textarea class='calleditor hide'>if ( $(this).attr('id') === 'jsfile"+ count +"' ) { $('.activeEditor').val('jsfile"+ count +"'); }</textarea>";
       var jsUndo = "<textarea class='undocode hide'> else if ( $('.activeEditor').val() === 'jsfile"+ count +"' ) { jsEditor"+ count + ".undo(); $('.edit.active').trigger('click'); }</textarea>";
       var jsRedo = "<textarea class='redocode hide'> else if ( $('.activeEditor').val() === 'jsfile"+ count +"' ) { jsEditor"+ count + ".redo(); $('.edit.active').trigger('click'); }</textarea>";
       var jsUpdate = "<textarea class='updatepreviewcode hide'>\npreview.write('<scr' + 'ipt>' + jsEditor"+ count +".getValue() + '</scr' + 'ipt>');\n</textarea>";
@@ -771,7 +784,8 @@ $(document).ready(function() {
       if ($val.toLowerCase().substring($val.length - 5) === ".html") {
         // $(".html-editor").append( '<li id="htmlfile'+ count + '" class="htmlfile' + count + '"></li>' );
         // $(".vfiles").append( '<li class="htmlfile' + count + '">'+ htmlfile +'<script>' + htmlCodemirror + '<' + '/script></li>' );
-        // alertify("NOTE: The live preview only applies to index.html");
+        var htmlAlert = "Sorry we don't allow you to add any other html files. <br /> Because the live preview only applies to index.html";
+        alertify.error("<span style=\"font:11px Lato;\">" + htmlAlert + "</span>");
       } else if ($val.toLowerCase().substring($val.length - 4) === ".css") {
         $(".css-editor").append( '<div id="cssfile'+ count + '" class="cssfile' + count + '"></div>' );
         $(".vfiles").append( '<li class="cssfile' + count + '">'+ cssfile +'<script>var activeEditor = $(".activeEditor"); ' + cssCodemirror + cssActiveEditor + '<' + '/script>'+ cssUndo + cssRedo + cssUpdate + cssJSZipHREF + cssJSZip + '</li>' );
@@ -1194,8 +1208,9 @@ $(document).ready(function() {
   });
   
   // Get Keycode/Which
-  $("[data-action=outputkeycode]").on("keyup", function(e) {
+  $("[data-action=outputkeycode]").on("keydown", function(e) {
     $(this).val(e.which);
+     e.preventDefault();
   }).on("click", function() {
     $(this).select();
   });
