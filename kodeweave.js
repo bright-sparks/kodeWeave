@@ -436,6 +436,10 @@ $(document).ready(function() {
           $("#applynewproject").empty().append( "<script>" + "$('[data-action=delfile]').trigger('click'); $('.check').attr('checked', false).trigger('change'); htmlEditor.setValue(''); cssEditor.setValue(''); jsEditor.setValue('');" + "<" + "/script>" );
           $("[data-action=newprojdialog]").fadeOut();
           alertify.success("New project created.");
+          save();
+          if (TogetherJS.running) {
+            TogetherJS.send({type: "init-items", items: []});
+          }
           return false;
         });
         $("[data-action=cancel-newproj]").click(function() {
