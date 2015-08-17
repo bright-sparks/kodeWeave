@@ -627,10 +627,10 @@ $(document).ready(function() {
           if ( $(".css-selected").is(":visible") ) {
             $(".css-selected").removeClass("css-selected");
             $(".css-editor > div").addClass("hide");
-            $("#" + $(this).parent().attr("class") ).removeClass("hide");
+            $("#" + $(this).parent().attr("class").replace(/list-group-item /g,'') ).removeClass("hide");
           }
           $(this).addClass("css-selected");
-          $("#" + $(this).parent().attr("class") ).removeClass("hide");
+          $("#" + $(this).parent().attr("class").replace(/list-group-item /g,'') ).removeClass("hide");
         } else if ( $(this).hasClass("jsfile") ) {
           if ( $(".js-selected").is(":visible") ) {
             $(".js-selected").removeClass("js-selected");
@@ -638,7 +638,7 @@ $(document).ready(function() {
             $("#" + $(this).parent().attr("class") ).removeClass("hide");
           }
           $(this).addClass("js-selected");
-          $("#" + $(this).parent().attr("class") ).removeClass("hide");
+          $("#" + $(this).parent().attr("class").replace(/list-group-item /g,'') ).removeClass("hide");
         } else if ( $(this).hasClass("otherfile") ) {
           if ( $(".other-selected").is(":visible") ) {
             $(".other-selected").removeClass("other-selected");
@@ -646,14 +646,13 @@ $(document).ready(function() {
             $("#" + $(this).parent().attr("class") ).removeClass("hide");
           }
           $(this).addClass("other-selected");
-          $("#" + $(this).parent().attr("class") ).removeClass("hide");
+          $("#" + $(this).parent().attr("class").replace(/list-group-item /g,'') ).removeClass("hide");
         }
         return false;
       });
 
       // Delete Virtual File
-      $("[data-action=delfile]").click(function(event) {
-        $("#" + $(this).parent().attr("class") ).remove();
+      $("[data-action=delfile]").on("click", function() {
         if ( $(this).prev().hasClass("htmlfile") ) {
           if ( $(this).prev().hasClass("html-selected") ) {
             if ( !$(".req-html").hasClass("html-selected") ) {
@@ -679,14 +678,11 @@ $(document).ready(function() {
             }
           }
         }
+        $("#" + $(this).parent().attr("class").replace(/list-group-item /g,'') ).remove();
         $(this).parent().remove();
-        
-        var delfile = $(".vfiles").html();
+        save();
         if (TogetherJS.running) {
-          TogetherJS.send({
-            type: "del-file",
-            output: delfile
-          });
+          TogetherJS.send({type: "init-items", items: []});
         }
       });
 
@@ -729,190 +725,292 @@ $(document).ready(function() {
       $("#applyjszip script").remove();
       $("#applyjszip").empty().append( "<script>" + $("[data-action=fulljszipcode]").val() + "<" + "/script>" );
       
+      if (TogetherJS.running) {
+        TogetherJS.reinitialize();
+      }
+
       return false;
     }
     SelectFile();
     
-    // Adds a new custom file
-    $(".addvfile").click(function(event) {
-      var count = Date.now();
-      var $val = $(".vfilename").val();
-      var myjs = ".js";
-      var findJS = myjs.substr(myjs.length - 3); // => ".js"
-      var mycss = ".css";
-      var findCSS = mycss.substr(mycss.length - 4); // => ".css"
-      var htmlfile = '<a class="htmlfile" data-action="htmlfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
-      var cssfile = '<a class="cssfile" data-action="cssfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
-      var jsfile = '<a class="jsfile" data-action="jsfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
-      var otherfile = '<a class="otherfile" data-action="otherfile' + count + '">'+ $val.toLowerCase() +'</a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
-      
-      var htmlCodemirror = 'var htmlEditor'+ count +' = CodeMirror(document.getElementById("htmlfile'+ count +'"), {  mode: "text/html",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "<!-- comment -->"});';
-      var cssCodemirror = 'var cssEditor'+ count +' = CodeMirror(document.getElementById("cssfile'+ count +'"), {  mode: "text/css",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "/* comment */"}); var inlet = Inlet(cssEditor'+ count +'); cssEditor'+ count +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); cssEditor'+ count +'.on("drop", function() { cssEditor'+ count +'.setValue(""); });';
-      var cssActiveEditor = '$("#cssfile'+ count +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "cssfile'+ count +'" ) { $(".activeEditor").val("cssfile'+ count +'"); } });';
-      var cssUndo = "<textarea class='undocode hide'> else if ( $('.activeEditor').val() === 'cssfile"+ count +"' ) { cssEditor"+ count + ".undo(); $('.edit.active').trigger('click'); }</textarea>";
-      var cssRedo = "<textarea class='redocode hide'> else if ( $('.activeEditor').val() === 'cssfile"+ count +"' ) { cssEditor"+ count + ".redo(); $('.edit.active').trigger('click'); }</textarea>";
-      var cssUpdate = "<textarea class='updatepreviewcode hide'>\npreview.write('<st' + 'yle' + '>' + cssEditor"+ count +".getValue() + '</st' + 'yle>');\n</textarea>";
-      var cssJSZipHREF = "<textarea class='zipfileshref hide'><link rel=\"stylesheet\" href=\"css/"+ $val.toLowerCase() +"\" /></textarea>";
-      var cssJSZip = "<textarea class='jszipcode hide'>zip.file('css/"+ $val.toLowerCase() +"', cssEditor"+ count +".getValue()); </textarea>";
-
-      var jsCodemirror = 'var jsEditor'+ count +' = CodeMirror(document.getElementById("jsfile'+ count +'"), {  mode: "text/javascript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "// comment"}); var inlet = Inlet(jsEditor'+ count +'); jsEditor'+ count +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); jsEditor'+ count +'.on("drop", function() { jsEditor'+ count +'.setValue(""); }); ';
-      var jsActiveEditor = '$("#jsfile'+ count +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "jsfile'+ count +'" ) { $(".activeEditor").val("jsfile'+ count +'"); } });';
-      var jsUndo = "<textarea class='undocode hide'> else if ( $('.activeEditor').val() === 'jsfile"+ count +"' ) { jsEditor"+ count + ".undo(); $('.edit.active').trigger('click'); }</textarea>";
-      var jsRedo = "<textarea class='redocode hide'> else if ( $('.activeEditor').val() === 'jsfile"+ count +"' ) { jsEditor"+ count + ".redo(); $('.edit.active').trigger('click'); }</textarea>";
-      var jsUpdate = "<textarea class='updatepreviewcode hide'>\npreview.write('<scr' + 'ipt>' + jsEditor"+ count +".getValue() + '</scr' + 'ipt>');\n</textarea>";
-      var jsJSZipHREF = "<textarea class='zipfileshref hide'><script src=\"js/"+ $val.toLowerCase() +"\"></script></textarea>";
-      var jsJSZip = "<textarea class='jszipcode hide'>zip.file('js/"+ $val.toLowerCase() +"', jsEditor"+ count +".getValue()); </textarea>";
-
-      var coffeeCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "text/x-coffeescript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var hamlCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "text/x-haml",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var jadeCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "text/x-jade",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var jsonCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "application/json",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var livescriptCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "text/x-livescript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var markdownCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "text/x-markdown",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var perlCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "text/x-perl",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var phpCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "application/x-httpd-php",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var pythonCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "text/x-python",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var rubyCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "text/x-ruby",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var sassCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "text/x-sass",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var xmlCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  mode: "application/xml",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]}); var inlet = Inlet(otherEditor'+ count +'); otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      
-      var otherCodemirror = 'var otherEditor'+ count +' = CodeMirror(document.getElementById("otherfile'+ count +'"), {  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ count +');  otherEditor'+ count +'.on("drop", function() { otherEditor'+ count +'.setValue(""); }); ';
-      var otherActiveEditor = '$("#otherfile'+ count +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ count +'" ) { $(".activeEditor").val("otherfile'+ count +'"); } });';
-      // var jsActiveEditor = "<textarea class='calleditor hide'>if ( $(this).attr('id') === 'jsfile"+ count +"' ) { $('.activeEditor').val('jsfile"+ count +"'); }</textarea>";
-      var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ $val.toLowerCase() +"', otherEditor"+ count +".getValue()); </textarea>";
-      
-      if ($val.toLowerCase().substring($val.length - 5) === ".html") {
-        // $(".html-editor").append( '<li id="htmlfile'+ count + '" class="htmlfile' + count + '"></li>' );
-        // $(".vfiles").append( '<li class="htmlfile' + count + '">'+ htmlfile +'<script>' + htmlCodemirror + '<' + '/script></li>' );
-        var htmlAlert = "Sorry we don't allow you to add any other html files. <br /> Because the live preview only applies to index.html";
-        alertify.error("<span style=\"font:11px Lato;\">" + htmlAlert + "</span>");
-      } else if ($val.toLowerCase().substring($val.length - 4) === ".css") {
-        $(".css-editor").append( '<div id="cssfile'+ count + '" class="cssfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="cssfile' + count + '">'+ cssfile +'<script>var activeEditor = $(".activeEditor"); ' + cssCodemirror + cssActiveEditor + '<' + '/script>'+ cssUndo + cssRedo + cssUpdate + cssJSZipHREF + cssJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 3) === ".js") {
-        $(".js-editor").append( '<div id="jsfile'+ count + '" class="jsfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="jsfile' + count + '">'+ jsfile + '<script>var activeEditor = $(".activeEditor"); ' + jsCodemirror + jsActiveEditor + '<' + '/script>'+ jsUndo + jsRedo + jsUpdate + jsJSZipHREF + jsJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 7) === ".coffee") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + coffeeCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 5) === ".haml") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + hamlCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 5) === ".jade") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + jsonCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 5) === ".json") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + jsonCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 3) === ".ls") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + livescriptCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 3) === ".md") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + markdownCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 3) === ".pl") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + perlCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 4) === ".php") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + phpCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 3) === ".py") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + pythonCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 3) === ".rb") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + rubyCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 5) === ".sass") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + sassCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else if ($val.toLowerCase().substring($val.length - 4) === ".xml") {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + xmlCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-      } else {
-        $(".other-editor").append( '<div id="otherfile'+ count + '" class="otherfile' + count + '"></div>' );
-        $(".vfiles").append( '<li class="otherfile' + count + '">'+ otherfile + '<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>' + otherJSZip + '</li>' );
-        alertify.error("Added file not detected!<br />Editor may encounter problems!");
+    $("#add").click(function() {
+      var Description = $("#description").val();
+      if (! $("#description").val()) {
+        alertify.error("<strong>Oops!</strong> Please enter an item above.");
+        return false;
       }
-      
-      SelectFile();
-
-      var newfile = $(".vfiles").html();
+      var id = "" + Date.now();
+      $("#description").val("").change();
+      addItem(Description, id);
+      save();
       if (TogetherJS.running) {
-        TogetherJS.send({
-          type: "new-file",
-          output: newfile
-        });
+        TogetherJS.send({type: "new-item", description: Description, id: id});
       }
-      
-      if ($val.toLowerCase().substring($val.length - 4) === ".css") {
-        var csseditor = $(".css-editor").html();
-        if (TogetherJS.running) {
-          TogetherJS.send({
-            type: "new-css",
-            output: csseditor
-          });
-        }
-      } else if ($val.toLowerCase().substring($val.length - 3) === ".js") {
-        var jseditor = $(".js-editor").html();
-        if (TogetherJS.running) {
-          TogetherJS.send({
-            type: "new-js",
-            output: jseditor
-          });
-        }
-      } else {
-        var othereditor = $(".other-editor").html();
-        if (TogetherJS.running) {
-          TogetherJS.send({
-            type: "new-other",
-            output: othereditor
-          });
-        }
-      }
-
-      $(".vfilename").val("");
+      SelectFile();
+      return false;
     });
     
-    $(".vfilename").keyup(function(event) {
-      if ( event.which == 13 ) {
-        $(".addvfile").click();
+    $("#description").on("keyup", function(event) {
+      if ( this.value === "clear" ) {
+        // $("#todos").empty();
+        $("[data-action=delfile]").trigger("click");
+        save();
+        if (TogetherJS.running) {
+          TogetherJS.send({type: "init-items", items: []});
+        }
+        this.value = "";
+      }
+      if (event.which == 13) {
+        $("#add").click();
       }
     });
-    TogetherJS.hub.on("new-file", function (msg) {
-      if (! msg.sameUrl) {
+    
+    function addItem(description, id) {
+      var existing = $("#" + id);
+      if (existing.length) {
+        // Already exists...
+        existing.closest("li").find(".description").text(description);
         return;
       }
-      $(".vfiles").html(msg.output);
-      SelectFile();
-    });
-    TogetherJS.hub.on("new-css", function (msg) {
-      if (! msg.sameUrl) {
-        return;
+      
+      if (description.toLowerCase().substring(description.length - 5) === ".html") {
+        var htmlAlert = "Sorry we don't allow you to add any other html files. <br /> Because the live preview only applies to index.html";
+        alertify.error("<span style=\"font:11px Lato;\">" + htmlAlert + "</span>");
+      } else if (description.toLowerCase().substring(description.length - 4) === ".css") {
+        var cssCodemirror = 'var cssEditor'+ id +' = CodeMirror(document.getElementById("cssfile'+ id +'"), {  mode: "text/css",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "/* comment */"}); var inlet = Inlet(cssEditor'+ id +'); cssEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); cssEditor'+ id +'.on("drop", function() { cssEditor'+ id +'.setValue(""); });';
+        var cssActiveEditor = '$("#cssfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "cssfile'+ id +'" ) { $(".activeEditor").val("cssfile'+ id +'"); } });';
+        var cssUpdate = "<textarea class='updatepreviewcode hide'>\npreview.write('<st' + 'yle' + '>' + cssEditor"+ id +".getValue() + '</st' + 'yle>');\n</textarea>";
+        var cssJSZipHREF = "<textarea class='zipfileshref hide'><link rel=\"stylesheet\" href=\"css/"+ description +"\" /></textarea>";
+        var cssJSZip = "<textarea class='jszipcode hide'>zip.file('css/"+ description +"', cssEditor"+ id +".getValue()); </textarea>";
+
+        var cssfile = '<a class="cssfile description" data-action="cssfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item cssfile'+ id +'">'+ cssfile +'<script>var activeEditor = $(".activeEditor"); ' + cssCodemirror + cssActiveEditor + '<' + '/script>'+ cssUpdate + cssJSZipHREF + cssJSZip + '</li>');
+        var editor = $('<div id="cssfile'+ id +'" class="cssfile'+ id +'"></div>');
+
+        file.find(".cssfile").attr("data-action", "cssfile" + id).text(description);
+        $(".css-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 3) === ".js") {
+        var jsCodemirror = 'var jsEditor'+ id +' = CodeMirror(document.getElementById("jsfile'+ id +'"), {  mode: "text/javascript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true,  lineWrapping: true,  autoCloseTags: true,  foldGutter: true,  dragDrop : true,  lint : true,  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-lint-markers"],  value: "// comment"}); var inlet = Inlet(jsEditor'+ id +'); jsEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); jsEditor'+ id +'.on("drop", function() { jsEditor'+ id +'.setValue(""); });';
+        var jsActiveEditor = '$("#jsfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "jsfile'+ id +'" ) { $(".activeEditor").val("jsfile'+ id +'"); } });';
+        var jsUpdate = "<textarea class='updatepreviewcode hide'>\npreview.write('<sc' + 'ript' + '>' + jsEditor"+ id +".getValue() + '</sc' + 'ript>');\n</textarea>";
+        var jsJSZipHREF = "<textarea class='zipfileshref hide'><script src=\"js/"+ description +"\"></script></textarea>";
+        var jsJSZip = "<textarea class='jszipcode hide'>zip.file('js/"+ description +"', jsEditor"+ id +".getValue()); </textarea>";
+
+        var jsfile = '<a class="jsfile description" data-action="jsfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item jsfile'+ id +'">'+ jsfile +'<script>var activeEditor = $(".activeEditor"); ' + jsCodemirror + jsActiveEditor + '<' + '/script>'+ jsUpdate + jsJSZipHREF + jsJSZip + '</li>');
+        var editor = $('<div id="jsfile'+ id +'" class="jsfile'+ id +'"></div>');
+
+        file.find(".jsfile").attr("data-action", "jsfile" + id).text(description);
+        $(".js-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 7) === ".coffee") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "text/x-coffeescript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 5) === ".haml") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "text/x-haml",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 5) === ".jade") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "text/x-jade",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 5) === ".json") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "application/json",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 3) === ".ls") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "text/x-livescript",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 3) === ".md") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "text/x-markdown",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 3) === ".pl") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "text/x-perl",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 4) === ".php") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "application/x-httpd-php",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 3) === ".py") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "text/x-python",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 3) === ".rb") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "text/x-ruby",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 5) === ".sass") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "text/x-sass",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else if (description.toLowerCase().substring(description.length - 4) === ".xml") {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  mode: "application/xml",  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
+      } else {
+        var otherCodemirror = 'var otherEditor'+ id +' = CodeMirror(document.getElementById("otherfile'+ id +'"), {  tabMode: "indent",  styleActiveLine: true,  lineNumbers: true, dragDrop : true, gutters: ["CodeMirror-linenumbers"]}); var inlet = Inlet(otherEditor'+ id +'); otherEditor'+ id +'.on("change", function() { clearTimeout(delay); delay = setTimeout(updatePreview, 300); }); otherEditor'+ id +'.on("drop", function() { otherEditor'+ id +'.setValue(""); });';
+        var otherActiveEditor = '$("#otherfile'+ id +'").on("mouseup touchend", function() { if ( $(this).attr("id") === "otherfile'+ id +'" ) { $(".activeEditor").val("otherfile'+ id +'"); } });';
+        var otherJSZip = "<textarea class='jszipcode hide'>zip.file('"+ description +"', otherEditor"+ id +".getValue()); </textarea>";
+
+        var otherfile = '<a class="otherfile description" data-action="otherfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+        var file = $('<li class="list-group-item otherfile'+ id +'">'+ otherfile +'<script>var activeEditor = $(".activeEditor"); ' + otherCodemirror + otherActiveEditor + '<' + '/script>'+ otherJSZip + '</li>');
+        var editor = $('<div id="otherfile'+ id +'" class="otherfile'+ id +'"></div>');
+
+        file.find(".otherfile").attr("data-action", "otherfile" + id).text(description);
+        $(".other-editor").append(editor);
+        $("#todos").append(file);
       }
-      $(".css-editor").html(msg.output);
+      
+      //var htmlfile = '<a class="htmlfile description" data-action="htmlfile"></a> <a class="fr" data-action="delfile"><i class="fa fa-times"></i></a>';
+      //var li = $('<li class="list-group-item">'+ htmlfile +'</li>');
+      //li.find("input").attr("id", id);
+      //li.find(".description").text(description);
+      //$("#todos").append(li);
+    }
+    
+    TogetherJS.hub.on("new-item", function(msg) {
+      addItem(msg.description, msg.id);
       SelectFile();
+      save();
     });
-    TogetherJS.hub.on("new-js", function (msg) {
-      if (! msg.sameUrl) {
-        return;
-      }
-      $(".js-editor").html(msg.output);
+    
+    TogetherJS.hub.on("init-items", function(msg) {
+      // $("#todos").empty();
+      $("[data-action=delfile]").trigger("click");
+      msg.items.forEach(function (item) {
+        addItem(item.description, item.id);
+      });
+      save();
+    });
+    
+    TogetherJS.hub.on("togetherjs.hello togetherjs.hello-back", function() {
+      TogetherJS.send({type: "init-items", items: getItems()});
+    });
+    
+    function getItems() {
+      var result = [];
+      $("#todos li.list-group-item").each(function() {
+        var $this = $(this);
+        result.push({
+          id: $this.find("a").not("[data-action=delfile]").attr("data-action"),
+          description: $this.find(".description").text()
+        });
+      });
       SelectFile();
-    });
-    TogetherJS.hub.on("new-other", function (msg) {
-      if (! msg.sameUrl) {
-        return;
-      }
-      $(".other-editor").html(msg.output);
-      SelectFile();
-    });
-    TogetherJS.hub.on("del-file", function (msg) {
-      if (! msg.sameUrl) {
-        return;
-      }
-      $(".vfiles").html(msg.output);
-      SelectFile();
-    });
+      return result;
+    }
+    
+    if (localStorage.getItem("todos")) {
+      JSON.parse(localStorage.getItem("todos")).forEach(function (item) {
+        addItem(item.description, item.id);
+        SelectFile();
+      });
+    }
+    
+    function save() {
+      localStorage.setItem("todos", JSON.stringify(getItems()));
+    }
   });
   
   // Add/Remove Libraries

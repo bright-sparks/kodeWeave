@@ -7,19 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <link rel="stylesheet" href="css/kodeweave.css" />
     <link rel="stylesheet" href="css/kodeweave-dark.css" />
-    <script src="https://togetherjs.com/togetherjs-min.js"></script>
     <script src="lib/jq/jquery.js"></script>
     <script src="lib/jszip/jszip.min.js"></script>
     <script src="lib/jszip/jszip-utils.js"></script>
     <script src="lib/jszip/FileSaver.js"></script>
     <script src="lib/alertify/alertify.min.js"></script>
-    <script>
-      TogetherJSConfig_siteName="kodeWeave";
-      TogetherJSConfig_toolName="Teamwork";
-      TogetherJSConfig_suppressJoinConfirmation = false;
-      TogetherJSConfig_includeHashInUrl = true;
-      TogetherJSConfig_dontShowClicks = true;
-    </script>
   </head>
   <body>
     <!-- Opening and Closing for final index.html code -->
@@ -54,7 +46,7 @@
 
     var zip = new JSZip(data);
 </textarea>
-      <ul class="vfiles">
+      <ul class="vfiles" id="todos">
         <li class="htmlEditor">
           <a class="html-selected htmlfile req-html">index.html</a>
           <textarea class="calleditor hide">if ( $(this).attr("id") === "htmlEditor" ) {
@@ -114,9 +106,9 @@
       <textarea class="calleditor undocode redocode hide">
 });</textarea>
       <footer>
-        <input type="text" class="vfilename fl" placeholder="filehere.type">
+        <input type="text" class="vfilename fl" id="description" placeholder="filehere.type">
 
-        <a class="addvfile fr">
+        <a class="addvfile fr" id="add">
           +
         </a>
       </footer>
@@ -689,6 +681,16 @@ setTimeout(updatePreview, 300);
       <div id="applyjszip"></div>
     </div>
     
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+    <script>
+      TogetherJSConfig_siteName="kodeWeave";
+      TogetherJSConfig_toolName="Teamwork";
+      TogetherJSConfig_includeHashInUrl = true;
+      TogetherJSConfig_dontShowClicks = true;
+      TogetherJSConfig_findRoom = {prefix: "togetherjskodeweave", max: 8};
+      TogetherJSConfig_storagePrefix = "tjs_kodeweave";
+      TogetherJSConfig_suppressJoinConfirmation = false;
+    </script>
     <script src="jqwidgets/jqxcore.js"></script>
     <script src="jqwidgets/jqxsplitter.js"></script>
 
