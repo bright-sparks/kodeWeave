@@ -1,4 +1,4 @@
-﻿/*Rounded Corners*/
+/*Rounded Corners*/
 /*top-left rounded Corners*/
 .jqx-rc-tl
 {
@@ -2771,7 +2771,7 @@ of the horizontal scrollbar.*/
 .jqx-splitter
 {
     overflow: hidden;
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     position: relative;
 }
 /* Split bar's class when the jqxSplitter is with horizontal orientation */

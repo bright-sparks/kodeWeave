@@ -30,6 +30,9 @@ Want to contribute? Great!
 If you'd like to become a kodeWeave developer.  
 You can contact the software manager Michael at either [Facebook](http://facebook.com/mikethedj4) [Twitter](http://twitter.com/mikethedj4) or via [Email](mailto:mikethedj4@yahoo.com).
 
+
+You can also submit a pull request here on Github :)
+
 **Note:** kodeWeave is being developed on the [Koding Network](http://koding.com/). 
 
 Of course kodeWeave is free and open source, so you can always fork the project and have fun :)
