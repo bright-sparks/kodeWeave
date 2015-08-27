@@ -33,7 +33,7 @@ You can contact the software manager Michael at either [Facebook](http://faceboo
 
 You can also submit a pull request here on Github :)
 
-**Note:** kodeWeave is being developed on the [Koding Network](http://koding.com/). 
+**Note:** kodeWeave is being developed on the [Koding Network](https://koding.com/R/mikethedj4). 
 
 Of course kodeWeave is free and open source, so you can always fork the project and have fun :)
 
